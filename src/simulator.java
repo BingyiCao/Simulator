@@ -30,6 +30,9 @@ public class simulator {
 	static int buf_size;
 	static int bandwidth;
 	static int look_buf_size;
+	
+	static PrintWriter writer;
+	static int stallcounter;
 
 	static StringBuffer buf = new StringBuffer("");
 
@@ -1225,7 +1228,9 @@ public class simulator {
 		//bingyi's Sep 6th
 		else {
 			sim.seperate_file();
-			PrintWriter writer = new PrintWriter("logfile", "UTF-8");
+			
+			
+			writer = new PrintWriter("logfile", "UTF-8");
 			System.out.println("The graphic interface is disabled...");
 			while (clk < conflist.size() + 1) {
 			//	sim.configure(conflist, clk);
@@ -1243,7 +1248,9 @@ public class simulator {
 			}
 			
 			//bingyi testing
+			
 			while (!done && clk > conflist.size()) {
+				statetofile();
 				boolean all = true;
 				if (list.get(0).equalsIgnoreCase("sorter")) {
 					if (!sim.pipeline[conflist.size() - 1].get_lf()
@@ -1251,7 +1258,7 @@ public class simulator {
 						done = true;
 					}
 				} 
-				/*else {
+				else {
 					if (clk > conflist.size() + real_input.size()) {
 						//System.out.println("trying to setup done");
 						for (int g = 0; g < conflist.size(); g++) {
@@ -1265,17 +1272,18 @@ public class simulator {
 						}
 					}
 				}
-	*/
+	
 				// bingyi's new code
 				stop = false;
 				for (int fl=0; fl<conflist.size(); fl++) {
 					if (sim.pipeline[fl].get_stall()) {
 						stop = true;
+						System.out.printf("%d. we are stalled\n",clk);
 					}
 				}
 				System.out.println(stop);
 				if (!stop) {
-				//	System.out.println("gosh, the input size is ");
+					//System.out.println("gosh, the input size is ");
 					//System.out.println(real_input);
 				if (real_input.size() != 0) {
 					//System.out.println("haha, we are in bingyi's new code");
@@ -1321,8 +1329,10 @@ public class simulator {
 				clk++;
 				System.out.println(clk);
 			}
+			
 			//when it is not done
 			while (!alldone && list.get(0).equalsIgnoreCase("sorter")) {
+				statetofile();
 				for (int j =0; j<conflist.size(); j++) {
 					sim.pipeline[j].push_to_buffer(j);
 				}
@@ -1330,6 +1340,7 @@ public class simulator {
 			}
 			//when it is done
 			while (alldone && !finish && list.get(0).equalsIgnoreCase("sorter")) {
+				statetofile();
 				System.out.println("alldone part");
 				//System.out.println("test here or not");
 				finish = true;
@@ -1359,6 +1370,7 @@ public class simulator {
 				}
 				clk++;
 			}
+			writer.printf("At cycle %d, It is all done!!", clk);
 			System.out.printf("at cycle %d, It is done!!!", clk);
 			//when it is done
 			
@@ -1514,6 +1526,104 @@ public class simulator {
 		buf.append("    <div style=\"clear:both;\"></div>\n");
 	}
 
+	//bingyi gui false state
+	private static void statetofile() {
+		writer.printf("Cycle %d:\n", clk);
+		for (int c = 0; c < conflist.size(); c++) {
+			if (pipeline[c].get_lchange()) {
+				writer.print("==>");
+			} else {
+				writer.print("   ");
+			}
+			if (pipeline[c].get_lf()) {
+				writer.print("empty[]");
+				String color = "purple";
+				String cname = "empty";
+				if (!pipeline[c].get_stall()) {
+				writer.print("    ");
+				}
+				else {
+					writer.print("stall");
+				}
+				
+			} else {
+				writer.print(pipeline[c].get_left());;
+				if (!pipeline[c].get_stall()) {
+						writer.print("    ");
+				}
+					else {
+						writer.print(" stall");
+					}
+			}
+			writer.print("								");
+		}
+		writer.println();
+		
+
+		for (int c = 0; c < conflist.size(); c++) {
+			writer.print("					");
+			
+			boolean cname = pipeline[c].get_tmp0f();
+			
+			if (pipeline[c].get_tchange()) {
+				writer.print("==>");
+			} else {
+				writer.print("   ");
+			}
+			writer.print(cname);
+			writer.print(pipeline[c].get_tmp0());
+			writer.print("	");
+			if (pipeline[c].get_ochange()) {
+				buf.append("<div style=\"width: 60px; height: 20px; font-size:12px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid white; background-color: "
+						+ "white" + "\">" + "==>" + "</div>\n");
+			} else {
+				buf.append("    <div style=\"width: 60px; height: 20px; float:left;\"></div>\n");
+			}
+			// color = "yellow";
+			cname = pipeline[c].get_outf();
+			writer.print(cname);
+			writer.print(" ");
+			writer.print(pipeline[c].get_out_new());
+			writer.print("		");
+		}
+		writer.println();
+		
+		
+		for (int c = 0; c < conflist.size(); c++) {
+			if (pipeline[c].get_rchange()) {
+				writer.print("==>"); 
+			} else {
+				writer.print("   ");
+			}
+			if (pipeline[c].get_rf()) {
+				writer.print("empty[]");
+			} else {
+				writer.print(pipeline[c].get_rightr());
+				writer.print(pipeline[c].get_right());
+			}
+			writer.print("									");
+		}
+		writer.println();
+
+		for (int c = 0; c < conflist.size(); c++) {
+			writer.print("				");
+			if (pipeline[c].get_bchange()) {
+				writer.print("==>"); 
+			} else {
+				writer.print("   ");
+			}
+			writer.print(pipeline[c].get_buffer());
+			
+			if (pipeline[c].get_brchange() ) {
+				writer.print("<==");
+			} else {
+				buf.append("    ");
+			}
+			writer.print("			");
+		}
+		writer.println();
+	}
+	//bingyi gui false state
 	private static void StatetoHtml(StringBuffer buf) {
 		buf.append("    <div style=\"clear:both;\"></div>\n");
 		buf.append("<div>");
