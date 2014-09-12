@@ -33,6 +33,9 @@ public class simulator {
 	
 	static PrintWriter writer;
 	static int stallcounter;
+	static int preprocesscounter;
+	static int end_area;
+	static int area_pipleline;
 
 	static StringBuffer buf = new StringBuffer("");
 
@@ -91,7 +94,7 @@ public class simulator {
 							left, tmp0.get(2), tmp0.get(3), tmp0.get(4),
 							tmp0.get(5), jn, Integer.parseInt(tmp0.get(6)));
 				} else {
-					System.out.println(list.get(0));
+					//System.out.println(list.get(0));
 					ArrayList jn = new ArrayList();
 					ArrayList tmp10 = new ArrayList();
 					tmp10.add(tmp0.get(1));
@@ -1061,7 +1064,7 @@ public class simulator {
 							
 						//}
 					}
-						System.out.printf("we are checking the %d pipeline", end);
+						//System.out.printf("we are checking the %d pipeline", end);
 						sim.pipeline[conflist.size()-1].check_stall(buf_size);
 					}
 				}
@@ -1228,155 +1231,191 @@ public class simulator {
 		//bingyi's Sep 6th
 		else {
 			sim.seperate_file();
-			
-			
 			writer = new PrintWriter("logfile", "UTF-8");
+			
 			System.out.println("The graphic interface is disabled...");
-			while (clk < conflist.size() + 1) {
-			//	sim.configure(conflist, clk);
-				sim.configure(conflist, clk);
-				if (clk ==0)
-					writer.println("Cycle "+clk + " Ready to start!");
-				else {
-					writer.printf("Cycle "+clk + ": pushing the configuration file ");
-					for (int i=clk-1; i>-1; i--) {
-						writer.print(conflist.get(i) + " ");
-					}
-					writer.print("\n");
-				}
-				clk++;
-			}
 			
-			//bingyi testing
-			
-			while (!done && clk > conflist.size()) {
+			//bingyi need to fix
+			while (!finish) {
 				statetofile();
-				boolean all = true;
-				if (list.get(0).equalsIgnoreCase("sorter")) {
-					if (!sim.pipeline[conflist.size() - 1].get_lf()
-							|| !sim.pipeline[conflist.size() - 1].get_rf()) {
-						done = true;
+				if (clk > conflist.size() + 1 && !finish && !list.get(0).equalsIgnoreCase("sorter")) {
+					//System.out.println("haha, we are in nested block join, not finish");
+					if (done) {
+						finish = true;
 					}
-				} 
-				else {
-					if (clk > conflist.size() + real_input.size()) {
-						//System.out.println("trying to setup done");
-						for (int g = 0; g < conflist.size(); g++) {
-							if (!sim.pipeline[g].get_rf()
-									|| sim.pipeline[g].get_tmp0f()||real_input.size()!=0) {
-								all = false;
-							}
-						}
-						if (all) {
-							done = true;
-						}
-					}
-				}
-	
-				// bingyi's new code
-				stop = false;
-				for (int fl=0; fl<conflist.size(); fl++) {
-					if (sim.pipeline[fl].get_stall()) {
-						stop = true;
-						System.out.printf("%d. we are stalled\n",clk);
-					}
-				}
-				System.out.println(stop);
-				if (!stop) {
-					//System.out.println("gosh, the input size is ");
-					//System.out.println(real_input);
-				if (real_input.size() != 0) {
-					//System.out.println("haha, we are in bingyi's new code");
-					//sim.pipeline[0].clock_move(input_data.get(0));
-					//input_data.remove(0);
-					//System.out.printf("the real input size is %d\n", real_input.size());
-					if (real_input.get(0).get(real_input.get(0).size()-1).equals("true")) {
-					//	System.out.println("in the get input stage");
-						//ArrayList ex_input = new ArrayList();
-						real_input.get(0).remove(real_input.get(0).size()-1);
-						if (list.get(0).equalsIgnoreCase("join or")||list.get(0).equalsIgnoreCase("join and")||list.get(0).equalsIgnoreCase("parallel processing")) {
-							sim.pipeline[0].clock_move_parallel(real_input.get(0), buf_size);
+					if (!sim.pipeline[0].buffer_empty()) {
+						if (list.get(0).equalsIgnoreCase("nested block join")) {
+						sim.pipeline[0].lookaside_both(real_input, search_table0, search_table1, out_table);
+						finish = false;
 						}
 						else {
-					sim.pipeline[0].clock_move(real_input.get(0), buf_size);
+							out_table.add(sim.pipeline[0].get_buffer_one(bandwidth));
 						}
-					//System.out.println(real_input.get(0));
-					real_input.remove(0);
-					}
-					else {
-						sim.pipeline[0].last_clk_move(buf_size);
-					}
-					
-				} else {
-					sim.pipeline[0].last_clk_move(buf_size);
-				}
-
-				for (int j = 1; j < conflist.size(); j++) {
-					if (pipeline[j - 1].out_f()) {
-						//System.out.printf("the %d has a valid output\n",
-							//	j - 1);
-						if (list.get(0).equalsIgnoreCase("join or")||list.get(0).equalsIgnoreCase("parallel processing")||list.get(0).equalsIgnoreCase("join and")) {
-							pipeline[j].clock_move_parallel(pipeline[j - 1].get_out(), buf_size);
-						}
-						else {
-						pipeline[j].clock_move(pipeline[j - 1].get_out(), buf_size);
-						}
-					} else {
-						pipeline[j].last_clk_move(buf_size);
-					}
-				}
-				}
-				clk++;
-				System.out.println(clk);
-			}
-			
-			//when it is not done
-			while (!alldone && list.get(0).equalsIgnoreCase("sorter")) {
-				statetofile();
-				for (int j =0; j<conflist.size(); j++) {
-					sim.pipeline[j].push_to_buffer(j);
-				}
-				alldone = true;
-			}
-			//when it is done
-			while (alldone && !finish && list.get(0).equalsIgnoreCase("sorter")) {
-				statetofile();
-				System.out.println("alldone part");
-				//System.out.println("test here or not");
-				finish = true;
-				if (!sim.pipeline[0].buffer_empty()) {
-					sim.pipeline[0].lookaside(search_table0, out_table);
-					finish = false;
-				}
-				int end = -1;
-				for (int j=1; j<conflist.size();j++) {
-				if (!sim.pipeline[j].buffer_empty()) {
-					end = j;
-				}
-				}
-				//System.out.println("haha end is here");
-				//System.out.println(end);
-				if ( end >=0) {
-					finish = false;
-				for (int j=0; j<end; j++) {
-					if (sim.pipeline[j].buffer_empty()) {
-						int rm_counter = 0;
-						rm_counter = sim.pipeline[j].push_reverse(sim.pipeline[j+1].get_buffer(), bandwidth, buf_size, rm_counter);
-						sim.pipeline[j+1].set_buf_em(rm_counter);
 						
 					}
+					if (real_input.size()!=0) {
+						finish = false;
+					}
+					int end = -1;
+					for (int j=1; j<conflist.size();j++) {
+					if (!sim.pipeline[j].buffer_empty()) {
+						end = j;
+					}
+					}
+					//System.out.println("haha end is here");
+					//System.out.println(end);
+					if ( end >=0) {
+						finish = false;
+					//for (int j=0; j<end; j++) {
+						for (int j=0; j<conflist.size()-1; j++) {
+						//if (sim.pipeline[j].buffer_empty()) {
+							int rm_counter = 0;
+							rm_counter = sim.pipeline[j].push_reverse(sim.pipeline[j+1].get_buffer(), bandwidth, buf_size, rm_counter);
+							sim.pipeline[j+1].set_buf_em(rm_counter);
+							
+						//}
+					}
+					//	System.out.printf("we are checking the %d pipeline", end);
+						sim.pipeline[conflist.size()-1].check_stall(buf_size);
+					}
 				}
+				//while (clk<=set_clk) {
+				if (clk < conflist.size() + 1) {
+					//if (clk < 2 && list.get(0).equalsIgnoreCase("sorter")) {
+						//sim.seperate();
+					//}
+					sim.configure(conflist, clk);
+				}
+				// else if (clk < input_data.size() + conflist.size()*2+2) {
+				else if (!done) {
+					boolean all = true;
+
+					if (list.get(0).equalsIgnoreCase("sorter")) {
+						if (!sim.pipeline[conflist.size() - 1].get_lf()
+								|| !sim.pipeline[conflist.size() - 1].get_rf()) {
+							done = true;
+						}
+					} else {
+						if (clk > conflist.size() + real_input.size()) {
+							//System.out.println("trying to setup done");
+							for (int g = 0; g < conflist.size(); g++) {
+								if (!sim.pipeline[g].get_rf()
+										|| sim.pipeline[g].get_tmp0f()||real_input.size()!=0) {
+									all = false;
+								}
+							}
+							if (all) {
+								done = true;
+							}
+						}
+					}
+
+					// bingyi's new code
+					stop = false;
+					for (int fl=0; fl<conflist.size(); fl++) {
+						if (sim.pipeline[fl].get_stall()) {
+							stop = true;
+						}
+					}
+					if (stop) {
+						stallcounter++;
+					}
+					if (!stop) {
+					//	System.out.println("gosh, the input size is ");
+						//System.out.println(real_input);
+					if (real_input.size() != 0) {
+						//System.out.println("haha, we are in bingyi's new code");
+						//sim.pipeline[0].clock_move(input_data.get(0));
+						//input_data.remove(0);
+						
+						if (real_input.get(0).get(real_input.get(0).size()-1).equals("true")) {
+						//	System.out.println("in the get input stage");
+							//ArrayList ex_input = new ArrayList();
+							real_input.get(0).remove(real_input.get(0).size()-1);
+							if (list.get(0).equalsIgnoreCase("join or")||list.get(0).equalsIgnoreCase("join and")||list.get(0).equalsIgnoreCase("parallel processing")) {
+								sim.pipeline[0].clock_move_parallel(real_input.get(0), buf_size);
+							}
+							else {
+						sim.pipeline[0].clock_move(real_input.get(0), buf_size);
+							}
+						//System.out.println(real_input.get(0));
+						real_input.remove(0);
+						}
+						else {
+							sim.pipeline[0].last_clk_move(buf_size);
+						}
+						
+					} else {
+						sim.pipeline[0].last_clk_move(buf_size);
+					}
+
+					for (int j = 1; j < conflist.size(); j++) {
+						if (pipeline[j - 1].out_f()) {
+							//System.out.printf("the %d has a valid output\n",
+								//	j - 1);
+							if (list.get(0).equalsIgnoreCase("join or")||list.get(0).equalsIgnoreCase("parallel processing")||list.get(0).equalsIgnoreCase("join and")) {
+								pipeline[j].clock_move_parallel(pipeline[j - 1].get_out(), buf_size);
+							}
+							else {
+							pipeline[j].clock_move(pipeline[j - 1].get_out(), buf_size);
+							}
+						} else {
+							pipeline[j].last_clk_move(buf_size);
+						}
+					}
+					}
+				}
+				else if (!alldone && list.get(0).equalsIgnoreCase("sorter")) {
+					for (int j =0; j<conflist.size(); j++) {
+						sim.pipeline[j].push_to_buffer(j);
+					}
+					alldone = true;
+				}
+				else if (alldone && !finish && list.get(0).equalsIgnoreCase("sorter")) {
+					//System.out.println("test here or not");
+					finish = true;
+					if (!sim.pipeline[0].buffer_empty()) {
+						sim.pipeline[0].lookaside(search_table0, out_table);
+						finish = false;
+					}
+					int end = -1;
+					for (int j=1; j<conflist.size();j++) {
+					if (!sim.pipeline[j].buffer_empty()) {
+						end = j;
+					}
+					}
+					//System.out.println("haha end is here");
+					//System.out.println(end);
+					if ( end >=0) {
+						finish = false;
+					for (int j=0; j<end; j++) {
+						if (sim.pipeline[j].buffer_empty()) {
+							int rm_counter = 0;
+							rm_counter = sim.pipeline[j].push_reverse(sim.pipeline[j+1].get_buffer(), bandwidth, buf_size, rm_counter);
+							sim.pipeline[j+1].set_buf_em(rm_counter);
+							
+						}
+					}
+					
+					}
+					
+				}
+				//else if (done && !finish && list.get(0).equalsIgnoreCase("nested block join")) {
+			
 				
-				}
+
 				clk++;
+				System.out.printf("clk is %d\n", clk);
+				}
+			//bingyi need to fix
+			if (finish) {
+				writer.printf("Finished at cycle %d, and the output is as following\n", clk);
+				writer.print(out_table);
+				System.out.printf("It took %d cycle to finish and the stall happens for %d", clk, stallcounter);
 			}
-			writer.printf("At cycle %d, It is all done!!", clk);
-			System.out.printf("at cycle %d, It is done!!!", clk);
-			//when it is done
-			
-		writer.close();
-			
+			writer.close();
 		}
+
 	}
 
 	private static ArrayList<File> directoryFiles(String path, String extension) {
@@ -1528,7 +1567,20 @@ public class simulator {
 
 	//bingyi gui false state
 	private static void statetofile() {
-		writer.printf("Cycle %d:\n", clk);
+		
+		if (clk < conflist.size() + 1) {
+				if (clk ==0)
+					writer.println("Cycle "+clk + " Ready to start!");
+				else {
+					writer.printf("Cycle "+clk + ": pushing the configuration file ");
+					for (int i=clk-1; i>-1; i--) {
+						writer.print(conflist.get(i) + " ");
+					}
+					writer.print("\n");
+				}
+			}
+		else {
+			writer.println("Cycle "+clk + " :");
 		for (int c = 0; c < conflist.size(); c++) {
 			if (pipeline[c].get_lchange()) {
 				writer.print("==>");
@@ -1537,8 +1589,7 @@ public class simulator {
 			}
 			if (pipeline[c].get_lf()) {
 				writer.print("empty[]");
-				String color = "purple";
-				String cname = "empty";
+				
 				if (!pipeline[c].get_stall()) {
 				writer.print("    ");
 				}
@@ -1622,6 +1673,7 @@ public class simulator {
 			writer.print("			");
 		}
 		writer.println();
+		}
 	}
 	//bingyi gui false state
 	private static void StatetoHtml(StringBuffer buf) {

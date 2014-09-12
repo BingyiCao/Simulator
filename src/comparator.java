@@ -58,7 +58,7 @@ public class comparator {
 	public comparator(int left_r, ArrayList left_d, String r_mod, String c_mod,
 			String s_mod, String u_mod, ArrayList jn, int cs) {
 		//System.out.println("the left register");
-		System.out.println(left_d);
+		//System.out.println(left_d);
 		this.register_mod = reg_mod.valueOf(r_mod);
 		this.comparator_mod = comp_mod.valueOf(c_mod);
 		this.sa_mod = satisfied_mod.valueOf(s_mod);
