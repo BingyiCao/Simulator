@@ -24,7 +24,8 @@ public class comparator {
 
 	private ArrayList<ArrayList> join = new ArrayList<ArrayList>();
 
-	private int left_register, right_register;
+	private int left_register, right_register, buffer_length, tmp_size;
+	
 	// sat_out, unsat_out, output, tmp0;
 
 	private boolean left_empty, right_empty, sat_f, unsat_f, out_valid,
@@ -196,6 +197,9 @@ public void clock_move_parallel(ArrayList line, int buf_size) {
 			this.tmp0_valid = true;
 			this.tmp0_change = true;
 			this.tmp0 = this.right;
+			if (tmp_size ==0) {
+				tmp_size = tmp0.size();
+			}
 		}
 	}
 
@@ -210,6 +214,9 @@ public void clock_move_parallel(ArrayList line, int buf_size) {
 			this.tmp0_valid = true;
 			this.tmp0_change = true;
 			this.tmp0 = this.right;
+		}
+		if (tmp_size ==0) {
+			tmp_size = tmp0.size();
 		}
 	}
 
@@ -306,6 +313,9 @@ public void clock_move_onefix_parallel(ArrayList line, int buf_size) {
 				if (this.sa_mod.equals(sa_mod.keepon_enter_last)) {
 					this.tmp0.add("end");
 				}
+				if (tmp_size==0) {
+					tmp_size = tmp0.size();
+				}
 			}
 			else {
 			if (this.sa_mod.equals(sa_mod.keepon)
@@ -313,6 +323,9 @@ public void clock_move_onefix_parallel(ArrayList line, int buf_size) {
 				this.tmp0_change = true;
 				this.tmp0_valid = true;
 				this.tmp0 = this.sat_out;
+				if (tmp_size==0) {
+					tmp_size = tmp0.size();
+				}
 			}
 			if (this.sa_mod.equals(sa_mod.enter_buffer)
 					|| this.sa_mod.equals(sa_mod.keepon_enter)||this.sa_mod.equals(sa_mod.keepon_enter_last)) {
@@ -358,6 +371,9 @@ public void clock_move_onefix_parallel(ArrayList line, int buf_size) {
 					if (this.sa_mod.equals(sa_mod.keepon_enter_last)) {
 						ha.add("end");
 					}
+					if (ha.size()>buffer_length) {
+						buffer_length=ha.size();
+					}
 					buffer.add(ha);
 				}
 				
@@ -388,6 +404,12 @@ public void clock_move_onefix_parallel(ArrayList line, int buf_size) {
 			buffer.add(ha);
 				}
 		}
+	}
+	public int get_tmpsize() {
+		return this.tmp_size;
+	}
+	public int get_bufferlength() {
+		return buffer_length;
 	}
 
 	public String get_name() {

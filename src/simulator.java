@@ -1245,6 +1245,7 @@ public class simulator {
 					}
 					if (!sim.pipeline[0].buffer_empty()) {
 						if (list.get(0).equalsIgnoreCase("nested block join")) {
+							System.out.println(real_input);
 						sim.pipeline[0].lookaside_both(real_input, search_table0, search_table1, out_table);
 						finish = false;
 						}
@@ -1405,13 +1406,42 @@ public class simulator {
 				
 
 				clk++;
-				System.out.printf("clk is %d\n", clk);
+				//System.out.printf("clk is %d\n", clk);
 				}
 			//bingyi need to fix
 			if (finish) {
 				writer.printf("Finished at cycle %d, and the output is as following\n", clk);
 				writer.print(out_table);
-				System.out.printf("It took %d cycle to finish and the stall happens for %d", clk, stallcounter);
+				System.out.printf("It took %d cycle to finish \nThe stall happens for %d\n", clk, stallcounter);
+				if (search_table0.size()>0 && search_table1.size()>0) {
+				System.out.printf("The size of search table 0 and search table 1 is %d and %d\n", search_table0.size()*search_table0.get(0).size(), search_table0.size()*search_table1.get(0).size());
+				}
+				else {
+					System.out.println("we don't need a search table here");
+				}
+				int area_unit = 0;
+				if (pipeline[0].get_left().size()!=0 && pipeline[0].get_right().size()!=0 ) {
+				area_unit = pipeline[0].get_left().size()+pipeline[0].get_right().size()+2+buf_size*pipeline[0].get_bufferlength()+2*pipeline[0].get_tmpsize();
+				//System.out.printf("the left size is %d\n", pipeline[0].get_left().size());
+				//System.out.printf("the right size is %d\n", pipeline[0].get_right().size());
+				//System.out.printf("the buffer length is %d\n", pipeline[0].get_bufferlength());
+				//System.out.printf("the tmp and output size is %d\n", pipeline[0].get_tmpsize());
+				System.out.printf("the area in each unit is %d\n", area_unit);
+				}
+				else if (pipeline[0].get_left().size()!=0) {
+					area_unit = 2*pipeline[0].get_left().size()+2+buf_size*pipeline[0].get_bufferlength()+2*pipeline[0].get_tmpsize();
+					System.out.println("it should be only sorter");
+				}
+				else if (pipeline[0].get_right().size()!=0) {
+					area_unit = 2*pipeline[0].get_right().size()+2+buf_size*pipeline[0].get_bufferlength()+2*pipeline[0].get_tmpsize();
+					System.out.println("it should be only sorter");
+				}
+				System.out.printf("the area in each unit is %d\n", area_unit);
+				System.out.printf("the total area in the pipeline is %d\n", area_unit*conflist.size());
+				double throughput =(double)(input_data.size()*Math.max(pipeline[0].get_left().size(), pipeline[0].get_right().size()))/clk;
+				System.out.printf("the input data length is %d\n", input_data.size());
+				System.out.printf("the record input size is %d\n", Math.max(pipeline[0].get_left().size(), pipeline[0].get_right().size()));
+				System.out.printf("the througput is %f", throughput);
 			}
 			writer.close();
 		}
