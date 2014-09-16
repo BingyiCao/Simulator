@@ -1,4 +1,3 @@
-import java.awt.List;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -24,18 +23,18 @@ public class simulator {
 	static int conflimit;
 	static int looklimit0;
 	static int looklimit1;
-	
+
 	static boolean stop;
-	
+
 	static int buf_size;
 	static int bandwidth;
 	static int look_buf_size;
-	
+
 	static PrintWriter writer;
 	static int stallcounter;
-	static int preprocesscounter;
-	static int end_area;
-	static int area_pipleline;
+	// static int preprocesscounter;
+	// static int end_area;
+	// static int area_pipleline;
 
 	static StringBuffer buf = new StringBuffer("");
 
@@ -45,7 +44,7 @@ public class simulator {
 	static ArrayList<ArrayList> search_table0 = new ArrayList<ArrayList>();
 	static ArrayList<ArrayList> search_table1 = new ArrayList<ArrayList>();
 	static ArrayList<ArrayList> out_table = new ArrayList<ArrayList>();
-	//new set of parameters for seperate
+	// new set of parameters for seperate
 	static ArrayList<ArrayList> input_data0 = new ArrayList<ArrayList>();
 	static ArrayList<String> list = new ArrayList<String>();
 	static ArrayList<ArrayList> conflist = new ArrayList<ArrayList>();
@@ -77,7 +76,7 @@ public class simulator {
 				if (!list.get(0).equalsIgnoreCase("nested block join")) {
 					ArrayList left = new ArrayList();
 					left.add(j);
-					//ArrayList<ArrayList> jn = new ArrayList<ArrayList>();
+					// ArrayList<ArrayList> jn = new ArrayList<ArrayList>();
 					ArrayList jn = new ArrayList();
 					if (!list.get(0).equalsIgnoreCase("sorter")) {
 						java.util.List<String> item2 = new ArrayList();
@@ -86,7 +85,7 @@ public class simulator {
 								.split(","));
 						ArrayList array_tmp0 = new ArrayList();
 						for (int f = 0; f < item2.size(); f++) {
-							//array_tmp0.add(item2.get(f));
+							// array_tmp0.add(item2.get(f));
 							jn.add(item2.get(f));
 						}
 					}
@@ -94,7 +93,7 @@ public class simulator {
 							left, tmp0.get(2), tmp0.get(3), tmp0.get(4),
 							tmp0.get(5), jn, Integer.parseInt(tmp0.get(6)));
 				} else {
-					//System.out.println(list.get(0));
+					// System.out.println(list.get(0));
 					ArrayList jn = new ArrayList();
 					ArrayList tmp10 = new ArrayList();
 					tmp10.add(tmp0.get(1));
@@ -106,29 +105,32 @@ public class simulator {
 		}
 
 	}
-	
-	//bingyi Sep 9th
+
+	// bingyi Sep 9th
 	public static void seperate_file() {
 		if (list.get(0).equalsIgnoreCase("sorter")) {
 			System.out.println("let us see what is the list");
 			System.out.println(list);
 			int sel_col = Integer.parseInt(list.get(1));
 			java.util.List<String> item0 = new ArrayList();
-			item0 = Arrays.asList(list.get(list.size()-1)
-					.substring(1, list.get(list.size()-1).length() - 1).split(","));
-			
+			item0 = Arrays.asList(list.get(list.size() - 1)
+					.substring(1, list.get(list.size() - 1).length() - 1)
+					.split(","));
+
 			for (int c = 0; c < input_data.size(); c++) {
 				String color = "white";
-					ArrayList em = new ArrayList();
-					real_input.add(em);
-					real_input.get(c).add(c);
-					real_input.get(c).add(input_data.get(c).get(Integer.parseInt(item0.get(sel_col))).toString());
-					if (c<look_buf_size) {
-						real_input.get(c).add("true");
-					}
-					else {
-						real_input.get(c).add("false");
-					}
+				ArrayList em = new ArrayList();
+				real_input.add(em);
+				real_input.get(c).add(c);
+				real_input.get(c).add(
+						input_data.get(c)
+								.get(Integer.parseInt(item0.get(sel_col)))
+								.toString());
+				if (c < look_buf_size) {
+					real_input.get(c).add("true");
+				} else {
+					real_input.get(c).add("false");
+				}
 			}
 			for (int c = 0; c < input_data.size(); c++) {
 				String color = "white";
@@ -136,249 +138,230 @@ public class simulator {
 				em.add(c);
 				search_table0.add(em);
 				for (int f = 0; f < item0.size(); f++) {
-					search_table0.get(c).add(input_data.get(c).get(Integer.parseInt(item0.get(f))).toString());
+					search_table0.get(c).add(
+							input_data.get(c)
+									.get(Integer.parseInt(item0.get(f)))
+									.toString());
 				}
 			}
-			}
-			else if (list.get(0).equalsIgnoreCase("nested block join")){
-				//need to change
-				System.out.println("we are in nested block join seperate buf");
-				
-				int sel_col0 = Integer.parseInt(list.get(1));
-				int sel_col1 = Integer.parseInt(list.get(2));
-				
-				ArrayList sel_arr = new ArrayList();
-				ArrayList sel_arr_1 = new ArrayList();
-				java.util.List<String> item0 = new ArrayList();
-				item0 = Arrays.asList(list.get(list.size()-1)
-						.substring(1, list.get(list.size()-1).length() - 1).split(","));
-				for (int f = 0; f < item0.size(); f++) {
-					java.util.List<String> item1 = new ArrayList();
-					item1 = Arrays
-							.asList(item0.get(f)
-									.substring(0, item0.get(f).length())
-									.split("-"));
-					if (item1.get(0).equals("1")
-							|| item1.get(0).equals(" 1")) {
-						sel_arr.add(item1.get(1));
-					} else if (item1.get(0).equals("2")
-							|| item1.get(0).equals(" 2")) {
-						sel_arr_1.add(item1.get(1));
-					}
-				}
-				
-				for (int c = 0; c < input_data0.size(); c++) {
-					String color = "white";
-						ArrayList em = new ArrayList();
-						real_input.add(em);
-						real_input.get(c).add(c);
-						real_input.get(c).add(input_data0.get(c).get(sel_col1).toString());
-						if (c<look_buf_size) {
-							real_input.get(c).add("true");
-						}
-						else {
-							real_input.get(c).add("false");
-						}
-				}
-				System.out.println("real input data is as following");
-				System.out.println(real_input);
-				
-				for (int c = 0; c < input_data.size(); c++) {
-					String color = "white";
-					ArrayList em = new ArrayList();
-					em.add(c);
-					search_table0.add(em);
-					System.out.println("input is here!");
-					System.out.println(input_data);
-					System.out.println("input0 is here!!");
-					System.out.println(input_data0);
-					for (int f = 0; f < sel_arr.size(); f++) {
-						search_table0.get(c).add(input_data.get(c).get(Integer.parseInt((String) sel_arr.get(f))).toString());
-					}
-				}
-				for (int c = 0; c < input_data0.size(); c++) {
-					
-					ArrayList em = new ArrayList();
-					em.add(c);
-					search_table1.add(em);
-					for (int f = 0; f < sel_arr_1.size(); f++) {
-						search_table1.get(c).add(input_data0.get(c).get(Integer.parseInt((String) sel_arr_1.get(f))).toString());
-					}
-					if (c<look_buf_size) {
-						search_table1.get(c).add("true");
-					}
-					else {
-						search_table1.get(c).add("false");
-					}
-				}
-			}
-			else {
-				for (int c = 0; c < input_data.size(); c++) {
-					
-						ArrayList em = new ArrayList();
-						real_input.add(em);
-						//real_input.get(c).add(c);
-						for (int ct=0; ct< input_data.get(c).size(); ct++) {
-						real_input.get(c).add(input_data.get(c).get(ct));
-						}
-						//if (c<look_buf_size) {
-							real_input.get(c).add("true");
-						//}
-						//else {
-							//real_input.get(c).add("false");
-						//}
-						
-				}
-				
-			/*	for (int c = 0; c < input_data.size(); c++) {
-					String color = "white";
-					ArrayList em = new ArrayList();
-					em.add(c);
-					search_table0.add(em);
-					for (int f = 0; f < item0.size(); f++) {
-						search_table0.get(c).add(input_data.get(c).get(Integer.parseInt(item0.get(f))).toString());
-					}
-					for (int f = 0; f < search_table0.get(c).size(); f++) {
-						String cname = (search_table0.get(c).get(f)).toString();
-						buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
-								+ color + "\">" + cname + "</div>\n");
-					}
-					buf.append("    <div style=\"clear:both;\"></div>\n");
-				}
-				buf.append("   </div>\n");*/
-			}
-	}
-	//bingyi Sep 9th
-
-	//bingyi's new code
-	public static void seperate(StringBuffer buf) {
-		if (list.get(0).equalsIgnoreCase("sorter")) {
-		System.out.println("let us see what is the list");
-		System.out.println(list);
-		int sel_col = Integer.parseInt(list.get(1));
-		java.util.List<String> item0 = new ArrayList();
-		item0 = Arrays.asList(list.get(list.size()-1)
-				.substring(1, list.get(list.size()-1).length() - 1).split(","));
-		buf.append("<div>");
-		buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
-				+ "Real Input Data, haha" + "</div>\n");
-		for (int c = 0; c < input_data.size(); c++) {
-			String color = "white";
-				ArrayList em = new ArrayList();
-				real_input.add(em);
-				real_input.get(c).add(c);
-				real_input.get(c).add(input_data.get(c).get(Integer.parseInt(item0.get(sel_col))).toString());
-				if (c<look_buf_size) {
-					real_input.get(c).add("true");
-				}
-				else {
-					real_input.get(c).add("false");
-				}
-				for (int f = 0; f < real_input.get(c).size(); f++) {
-					if (real_input.get(c).get(real_input.get(c).size()-1).equals("true")) {
-						color = "green";
-					}
-					else {
-						color = "red";
-					}
-					String cname = (real_input.get(c).get(f)).toString();
-					buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
-							+ color + "\">" + cname + "</div>\n");
-				}
-				//String cname = Integer.toString(c);
-				//buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
-				//		+ color + "\">" + cname + "</div>\n");
-				//cname = input_data.get(c).get(Integer.parseInt(item0.get(sel_col))).toString();
-				//buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
-					//	+ color + "\">" + cname + "</div>\n");
-			
-			buf.append("    <div style=\"clear:both;\"></div>\n");
-		}
-		buf.append("<div>");
-		buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
-				+ "New Data Table" + "</div>\n");
-		for (int c = 0; c < input_data.size(); c++) {
-			String color = "white";
-			ArrayList em = new ArrayList();
-			em.add(c);
-			search_table0.add(em);
-			for (int f = 0; f < item0.size(); f++) {
-				search_table0.get(c).add(input_data.get(c).get(Integer.parseInt(item0.get(f))).toString());
-			}
-			for (int f = 0; f < search_table0.get(c).size(); f++) {
-				String cname = (search_table0.get(c).get(f)).toString();
-				buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
-						+ color + "\">" + cname + "</div>\n");
-			}
-			buf.append("    <div style=\"clear:both;\"></div>\n");
-		}
-		buf.append("   </div>\n");
-		}
-		else if (list.get(0).equalsIgnoreCase("nested block join")){
-			//need to change
+		} else if (list.get(0).equalsIgnoreCase("nested block join")) {
+			// need to change
 			System.out.println("we are in nested block join seperate buf");
-			
+
 			int sel_col0 = Integer.parseInt(list.get(1));
 			int sel_col1 = Integer.parseInt(list.get(2));
-			
+
 			ArrayList sel_arr = new ArrayList();
 			ArrayList sel_arr_1 = new ArrayList();
 			java.util.List<String> item0 = new ArrayList();
-			item0 = Arrays.asList(list.get(list.size()-1)
-					.substring(1, list.get(list.size()-1).length() - 1).split(","));
+			item0 = Arrays.asList(list.get(list.size() - 1)
+					.substring(1, list.get(list.size() - 1).length() - 1)
+					.split(","));
 			for (int f = 0; f < item0.size(); f++) {
 				java.util.List<String> item1 = new ArrayList();
-				item1 = Arrays
-						.asList(item0.get(f)
-								.substring(0, item0.get(f).length())
-								.split("-"));
-				if (item1.get(0).equals("1")
-						|| item1.get(0).equals(" 1")) {
+				item1 = Arrays.asList(item0.get(f)
+						.substring(0, item0.get(f).length()).split("-"));
+				if (item1.get(0).equals("1") || item1.get(0).equals(" 1")) {
 					sel_arr.add(item1.get(1));
 				} else if (item1.get(0).equals("2")
 						|| item1.get(0).equals(" 2")) {
 					sel_arr_1.add(item1.get(1));
 				}
 			}
-			//System.out.println("haha, let us see the sel_arr");
-			//System.out.println(sel_arr);
-		//	System.out.println("let us see the sel_arr_1");
-			//System.out.println(sel_arr_1);
+
+			for (int c = 0; c < input_data0.size(); c++) {
+				String color = "white";
+				ArrayList em = new ArrayList();
+				real_input.add(em);
+				real_input.get(c).add(c);
+				real_input.get(c).add(
+						input_data0.get(c).get(sel_col1).toString());
+				if (c < look_buf_size) {
+					real_input.get(c).add("true");
+				} else {
+					real_input.get(c).add("false");
+				}
+			}
+			System.out.println("real input data is as following");
+			System.out.println(real_input);
+
+			for (int c = 0; c < input_data.size(); c++) {
+				String color = "white";
+				ArrayList em = new ArrayList();
+				em.add(c);
+				search_table0.add(em);
+				System.out.println("input is here!");
+				System.out.println(input_data);
+				System.out.println("input0 is here!!");
+				System.out.println(input_data0);
+				for (int f = 0; f < sel_arr.size(); f++) {
+					search_table0.get(c).add(
+							input_data
+									.get(c)
+									.get(Integer.parseInt((String) sel_arr
+											.get(f))).toString());
+				}
+			}
+			for (int c = 0; c < input_data0.size(); c++) {
+
+				ArrayList em = new ArrayList();
+				em.add(c);
+				search_table1.add(em);
+				for (int f = 0; f < sel_arr_1.size(); f++) {
+					search_table1.get(c).add(
+							input_data0
+									.get(c)
+									.get(Integer.parseInt((String) sel_arr_1
+											.get(f))).toString());
+				}
+				if (c < look_buf_size) {
+					search_table1.get(c).add("true");
+				} else {
+					search_table1.get(c).add("false");
+				}
+			}
+		} else {
+			for (int c = 0; c < input_data.size(); c++) {
+
+				ArrayList em = new ArrayList();
+				real_input.add(em);
+				// real_input.get(c).add(c);
+				for (int ct = 0; ct < input_data.get(c).size(); ct++) {
+					real_input.get(c).add(input_data.get(c).get(ct));
+				}
+				real_input.get(c).add("true");
+			}
+		}
+	}
+
+	// bingyi Sep 9th
+
+	// bingyi's new code
+	public static void seperate(StringBuffer buf) {
+		if (list.get(0).equalsIgnoreCase("sorter")) {
+			System.out.println("let us see what is the list");
+			System.out.println(list);
+			int sel_col = Integer.parseInt(list.get(1));
+			java.util.List<String> item0 = new ArrayList();
+			item0 = Arrays.asList(list.get(list.size() - 1)
+					.substring(1, list.get(list.size() - 1).length() - 1)
+					.split(","));
+			buf.append("<div>");
+			buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
+					+ "Real Input Data, haha" + "</div>\n");
+			for (int c = 0; c < input_data.size(); c++) {
+				String color = "white";
+				ArrayList em = new ArrayList();
+				real_input.add(em);
+				real_input.get(c).add(c);
+				real_input.get(c).add(
+						input_data.get(c)
+								.get(Integer.parseInt(item0.get(sel_col)))
+								.toString());
+				if (c < look_buf_size) {
+					real_input.get(c).add("true");
+				} else {
+					real_input.get(c).add("false");
+				}
+				for (int f = 0; f < real_input.get(c).size(); f++) {
+					if (real_input.get(c).get(real_input.get(c).size() - 1)
+							.equals("true")) {
+						color = "green";
+					} else {
+						color = "red";
+					}
+					String cname = (real_input.get(c).get(f)).toString();
+					buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
+							+ color + "\">" + cname + "</div>\n");
+				}
+				// String cname = Integer.toString(c);
+				// buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
+				// + color + "\">" + cname + "</div>\n");
+				// cname =
+				// input_data.get(c).get(Integer.parseInt(item0.get(sel_col))).toString();
+				// buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
+				// + color + "\">" + cname + "</div>\n");
+
+				buf.append("    <div style=\"clear:both;\"></div>\n");
+			}
+			buf.append("<div>");
+			buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
+					+ "New Data Table" + "</div>\n");
+			for (int c = 0; c < input_data.size(); c++) {
+				String color = "white";
+				ArrayList em = new ArrayList();
+				em.add(c);
+				search_table0.add(em);
+				for (int f = 0; f < item0.size(); f++) {
+					search_table0.get(c).add(
+							input_data.get(c)
+									.get(Integer.parseInt(item0.get(f)))
+									.toString());
+				}
+				for (int f = 0; f < search_table0.get(c).size(); f++) {
+					String cname = (search_table0.get(c).get(f)).toString();
+					buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
+							+ color + "\">" + cname + "</div>\n");
+				}
+				buf.append("    <div style=\"clear:both;\"></div>\n");
+			}
+			buf.append("   </div>\n");
+		} else if (list.get(0).equalsIgnoreCase("nested block join")) {
+			// need to change
+			System.out.println("we are in nested block join seperate buf");
+
+			int sel_col0 = Integer.parseInt(list.get(1));
+			int sel_col1 = Integer.parseInt(list.get(2));
+
+			ArrayList sel_arr = new ArrayList();
+			ArrayList sel_arr_1 = new ArrayList();
+			java.util.List<String> item0 = new ArrayList();
+			item0 = Arrays.asList(list.get(list.size() - 1)
+					.substring(1, list.get(list.size() - 1).length() - 1)
+					.split(","));
+			for (int f = 0; f < item0.size(); f++) {
+				java.util.List<String> item1 = new ArrayList();
+				item1 = Arrays.asList(item0.get(f)
+						.substring(0, item0.get(f).length()).split("-"));
+				if (item1.get(0).equals("1") || item1.get(0).equals(" 1")) {
+					sel_arr.add(item1.get(1));
+				} else if (item1.get(0).equals("2")
+						|| item1.get(0).equals(" 2")) {
+					sel_arr_1.add(item1.get(1));
+				}
+			}
+			// System.out.println("haha, let us see the sel_arr");
+			// System.out.println(sel_arr);
+			// System.out.println("let us see the sel_arr_1");
+			// System.out.println(sel_arr_1);
 			buf.append("<div>");
 			buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
 					+ "Real Input Data" + "</div>\n");
-			//System.out.println("let us see input_data0.size");
-			//System.out.println(input_data0);
+			// System.out.println("let us see input_data0.size");
+			// System.out.println(input_data0);
 			for (int c = 0; c < input_data0.size(); c++) {
 				String color = "white";
-					ArrayList em = new ArrayList();
-					real_input.add(em);
-					real_input.get(c).add(c);
-					real_input.get(c).add(input_data0.get(c).get(sel_col1).toString());
-					if (c<look_buf_size) {
-						real_input.get(c).add("true");
+				ArrayList em = new ArrayList();
+				real_input.add(em);
+				real_input.get(c).add(c);
+				real_input.get(c).add(
+						input_data0.get(c).get(sel_col1).toString());
+				if (c < look_buf_size) {
+					real_input.get(c).add("true");
+				} else {
+					real_input.get(c).add("false");
+				}
+				for (int f = 0; f < real_input.get(c).size(); f++) {
+					if (real_input.get(c).get(real_input.get(c).size() - 1)
+							.equals("true")) {
+						color = "green";
+					} else {
+						color = "red";
 					}
-					else {
-						real_input.get(c).add("false");
-					}
-					for (int f = 0; f < real_input.get(c).size(); f++) {
-						if (real_input.get(c).get(real_input.get(c).size()-1).equals("true")) {
-							color = "green";
-						}
-						else {
-							color = "red";
-						}
-						String cname = (real_input.get(c).get(f)).toString();
-						buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
-								+ color + "\">" + cname + "</div>\n");
-					}
-				//	String cname = Integer.toString(c);
-					//buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
-						//	+ color + "\">" + cname + "</div>\n");
-					//cname = input_data0.get(c).get(sel_col1).toString();
-					//buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
-						//	+ color + "\">" + cname + "</div>\n");
-				
+					String cname = (real_input.get(c).get(f)).toString();
+					buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
+							+ color + "\">" + cname + "</div>\n");
+				}
 				buf.append("    <div style=\"clear:both;\"></div>\n");
 			}
 			System.out.println("real input data is as following");
@@ -396,7 +379,11 @@ public class simulator {
 				System.out.println("input0 is here!!");
 				System.out.println(input_data0);
 				for (int f = 0; f < sel_arr.size(); f++) {
-					search_table0.get(c).add(input_data.get(c).get(Integer.parseInt((String) sel_arr.get(f))).toString());
+					search_table0.get(c).add(
+							input_data
+									.get(c)
+									.get(Integer.parseInt((String) sel_arr
+											.get(f))).toString());
 				}
 				for (int f = 0; f < search_table0.get(c).size(); f++) {
 					String cname = (search_table0.get(c).get(f)).toString();
@@ -414,19 +401,22 @@ public class simulator {
 				em.add(c);
 				search_table1.add(em);
 				for (int f = 0; f < sel_arr_1.size(); f++) {
-					search_table1.get(c).add(input_data0.get(c).get(Integer.parseInt((String) sel_arr_1.get(f))).toString());
+					search_table1.get(c).add(
+							input_data0
+									.get(c)
+									.get(Integer.parseInt((String) sel_arr_1
+											.get(f))).toString());
 				}
-				if (c<look_buf_size) {
+				if (c < look_buf_size) {
 					search_table1.get(c).add("true");
-				}
-				else {
+				} else {
 					search_table1.get(c).add("false");
 				}
 				for (int f = 0; f < search_table1.get(c).size(); f++) {
-					if (real_input.get(c).get(real_input.get(c).size()-1).equals("true")) {
+					if (real_input.get(c).get(real_input.get(c).size() - 1)
+							.equals("true")) {
 						color = "green";
-					}
-					else {
+					} else {
 						color = "red";
 					}
 					String cname = (search_table1.get(c).get(f)).toString();
@@ -436,172 +426,91 @@ public class simulator {
 				buf.append("    <div style=\"clear:both;\"></div>\n");
 			}
 			buf.append("   </div>\n");
-			
-		}
-		/*else if (list.get(0).equalsIgnoreCase("parallel processing")) {
-			System.out.println("we are in parallel processing unit");
-		}
-		else if (list.get(0).equalsIgnoreCase("join and")) {
-			System.out.println("we are in join and");
-			
-		}
-		else if (list.get(0).equalsIgnoreCase("join or")) {
-			System.out.println("we are in join or");
-		}*/
-		else {
-			//System.out.println("we are in seperate else");
-			//System.out.println(input_data);
-			//System.out.println("next step, to change the real_input");
-			//real_input = input_data;
-			//System.out.println(real_input);
-			//System.out.println("let us see what is the list");
-			//System.out.println(list);
-			//int sel_col = Integer.parseInt(list.get(1));
-			//java.util.List<String> item0 = new ArrayList();
-			//item0 = Arrays.asList(list.get(list.size()-1)
-				//	.substring(1, list.get(list.size()-1).length() - 1).split(","));
-			//buf.append("<div>");
-			//buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
-				//	+ "Real Input Data, haha" + "</div>\n");
+
+		} else {
 			for (int c = 0; c < input_data.size(); c++) {
 				String color = "white";
-					ArrayList em = new ArrayList();
-					real_input.add(em);
-					//real_input.get(c).add(c);
-					for (int ct=0; ct< input_data.get(c).size(); ct++) {
+				ArrayList em = new ArrayList();
+				real_input.add(em);
+				// real_input.get(c).add(c);
+				for (int ct = 0; ct < input_data.get(c).size(); ct++) {
 					real_input.get(c).add(input_data.get(c).get(ct));
+				}
+				real_input.get(c).add("true");
+				for (int f = 0; f < real_input.get(c).size(); f++) {
+					if (real_input.get(c).get(real_input.get(c).size() - 1)
+							.equals("true")) {
+						color = "green";
+					} else {
+						color = "red";
 					}
-					//if (c<look_buf_size) {
-						real_input.get(c).add("true");
-					//}
-					//else {
-						//real_input.get(c).add("false");
-					//}
-					for (int f = 0; f < real_input.get(c).size(); f++) {
-						if (real_input.get(c).get(real_input.get(c).size()-1).equals("true")) {
-							color = "green";
-						}
-						else {
-							color = "red";
-						}
-						String cname = (real_input.get(c).get(f)).toString();
-						buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
-								+ color + "\">" + cname + "</div>\n");
-					}
-					//String cname = Integer.toString(c);
-					//buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
-					//		+ color + "\">" + cname + "</div>\n");
-					//cname = input_data.get(c).get(Integer.parseInt(item0.get(sel_col))).toString();
-					//buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
-						//	+ color + "\">" + cname + "</div>\n");
-				
+					String cname = (real_input.get(c).get(f)).toString();
+					buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
+							+ color + "\">" + cname + "</div>\n");
+				}
 				buf.append("    <div style=\"clear:both;\"></div>\n");
 			}
 			buf.append("<div>");
 			buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
 					+ "New Data Table" + "</div>\n");
-		/*	for (int c = 0; c < input_data.size(); c++) {
+		}
+	}
+
+	// bingyi's new code
+
+	// bingyi's newest code
+	public static void output(StringBuffer buf) {
+		if (list.get(0).equals("nested block join")) {
+			for (int c = 0; c < search_table0.size(); c++) {
+				buf.append("<div>");
 				String color = "white";
 				ArrayList em = new ArrayList();
 				em.add(c);
-				search_table0.add(em);
-				for (int f = 0; f < item0.size(); f++) {
-					search_table0.get(c).add(input_data.get(c).get(Integer.parseInt(item0.get(f))).toString());
-				}
 				for (int f = 0; f < search_table0.get(c).size(); f++) {
+					// search_table0.get(c).add(input_data.get(c).get(Integer.parseInt(item0.get(f))).toString());
 					String cname = (search_table0.get(c).get(f)).toString();
 					buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
 							+ color + "\">" + cname + "</div>\n");
 				}
 				buf.append("    <div style=\"clear:both;\"></div>\n");
 			}
-			buf.append("   </div>\n");*/
-		}
-	}
-	
-	//bingyi's new code
-	
-	//bingyi's newest code
-	public static void output(StringBuffer buf) {
-		/*buf.append("<div>");
-		buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
-				+ "Search Table 0" + "</div>\n");
-		buf.append("    <div style=\"clear:both;\"></div>\n");
-		buf.append("   </div>\n");
-		buf.append("<div>");
-		
-		buf.append("   </div>\n");*/
-		if (list.get(0).equals("nested block join")) {
-		for (int c = 0; c < search_table0.size(); c++) {
-			buf.append("<div>");
-			String color = "white";
-			ArrayList em = new ArrayList();
-			em.add(c);
-			for (int f = 0; f < search_table0.get(c).size(); f++) {
-				//search_table0.get(c).add(input_data.get(c).get(Integer.parseInt(item0.get(f))).toString());
-				String cname = (search_table0.get(c).get(f)).toString();
-				buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
-						+ color + "\">" + cname + "</div>\n");
-			}
-			buf.append("    <div style=\"clear:both;\"></div>\n");
-		}
-		buf.append("   </div>\n");
-		buf.append("<div>");
-		
-		buf.append("   </div>\n");
-		buf.append("<div>");
-		buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
-				+ "Search Table 0" + "</div>\n");
-		buf.append("    <div style=\"clear:both;\"></div>\n");
-		buf.append("   </div>\n");
-		if (list.get(0).equalsIgnoreCase("nested block join")) {
-			
-			
-			for (int c = 0; c < search_table1.size(); c++) {
-				String color = "white";
-				ArrayList em = new ArrayList();
-				em.add(c);
-				for (int f = 0; f < search_table1.get(c).size(); f++) {
-					if (search_table1.get(c).get(search_table1.get(c).size()-1).equals("true")) {
-						color = "green";
-					}
-					else {
-						color = "red";
-					}
-					//search_table0.get(c).add(input_data.get(c).get(Integer.parseInt(item0.get(f))).toString());
-					String cname = (search_table1.get(c).get(f)).toString();
-					buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
-							+ color + "\">" + cname + "</div>\n");
-				}
-				buf.append("    <div style=\"clear:both;\"></div>\n");
-			
-			
-			}
-		buf.append("   </div>\n");
-		buf.append("<div>");
-		buf.append("<div>");
-		buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
-				+ "Search Table 1" + "</div>\n"); }
-		buf.append("    <div style=\"clear:both;\"></div>\n");
-		buf.append("   </div>\n");
-		buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
-				+ "Output Table" + "</div>\n");
-		buf.append("    <div style=\"clear:both;\"></div>\n");
-		for (int c = 0; c < out_table.size(); c++) {
-			String color = "white";
-			ArrayList em = new ArrayList();
-			em.add(c);
-			for (int f = 0; f < out_table.get(c).size(); f++) {
-				//search_table0.get(c).add(input_data.get(c).get(Integer.parseInt(item0.get(f))).toString());
-				String cname = (out_table.get(c).get(f)).toString();
-				buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
-						+ color + "\">" + cname + "</div>\n");
-			}
-			buf.append("    <div style=\"clear:both;\"></div>\n");}
 			buf.append("   </div>\n");
-		}
-		else {
-			
+			buf.append("<div>");
+
+			buf.append("   </div>\n");
+			buf.append("<div>");
+			buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
+					+ "Search Table 0" + "</div>\n");
+			buf.append("    <div style=\"clear:both;\"></div>\n");
+			buf.append("   </div>\n");
+			if (list.get(0).equalsIgnoreCase("nested block join")) {
+
+				for (int c = 0; c < search_table1.size(); c++) {
+					String color = "white";
+					ArrayList em = new ArrayList();
+					em.add(c);
+					for (int f = 0; f < search_table1.get(c).size(); f++) {
+						if (search_table1.get(c)
+								.get(search_table1.get(c).size() - 1)
+								.equals("true")) {
+							color = "green";
+						} else {
+							color = "red";
+						}
+						// search_table0.get(c).add(input_data.get(c).get(Integer.parseInt(item0.get(f))).toString());
+						String cname = (search_table1.get(c).get(f)).toString();
+						buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
+								+ color + "\">" + cname + "</div>\n");
+					}
+					buf.append("    <div style=\"clear:both;\"></div>\n");
+
+				}
+				buf.append("   </div>\n");
+				buf.append("<div>");
+				buf.append("<div>");
+				buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
+						+ "Search Table 1" + "</div>\n");
+			}
 			buf.append("    <div style=\"clear:both;\"></div>\n");
 			buf.append("   </div>\n");
 			buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
@@ -612,23 +521,43 @@ public class simulator {
 				ArrayList em = new ArrayList();
 				em.add(c);
 				for (int f = 0; f < out_table.get(c).size(); f++) {
-					//search_table0.get(c).add(input_data.get(c).get(Integer.parseInt(item0.get(f))).toString());
+					// search_table0.get(c).add(input_data.get(c).get(Integer.parseInt(item0.get(f))).toString());
 					String cname = (out_table.get(c).get(f)).toString();
 					buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
 							+ color + "\">" + cname + "</div>\n");
 				}
-				buf.append("    <div style=\"clear:both;\"></div>\n");}
-				buf.append("   </div>\n");
-			
+				buf.append("    <div style=\"clear:both;\"></div>\n");
+			}
+			buf.append("   </div>\n");
+		} else {
+
+			buf.append("    <div style=\"clear:both;\"></div>\n");
+			buf.append("   </div>\n");
+			buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
+					+ "Output Table" + "</div>\n");
+			buf.append("    <div style=\"clear:both;\"></div>\n");
+			for (int c = 0; c < out_table.size(); c++) {
+				String color = "white";
+				ArrayList em = new ArrayList();
+				em.add(c);
+				for (int f = 0; f < out_table.get(c).size(); f++) {
+					// search_table0.get(c).add(input_data.get(c).get(Integer.parseInt(item0.get(f))).toString());
+					String cname = (out_table.get(c).get(f)).toString();
+					buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
+							+ color + "\">" + cname + "</div>\n");
+				}
+				buf.append("    <div style=\"clear:both;\"></div>\n");
+			}
+			buf.append("   </div>\n");
+
 		}
-		
+
 	}
-	
-	
-	//bingyi's newest code
-	
+
+	// bingyi's newest code
+
 	public static void ConfiguretoHtml(StringBuffer buf) {
-		
+
 		buf.append("<div>");
 		buf.append("<div style=\"width: 1000px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
 				+ "Configuration" + "</div>\n");
@@ -696,87 +625,7 @@ public class simulator {
 		writer.close();
 	}
 
-	public static void main(String[] args) throws Exception {
-		//ArrayList<ArrayList> real_input = null;
-		if (args.length == 7) {
-			gui = Boolean.parseBoolean(args[0]);
-			conffile = args[1];
-			inputdata = args[2];
-			outputfile = args[3];
-			buf_size = Integer.parseInt(args[4]);
-			bandwidth = Integer.parseInt(args[5]);
-			look_buf_size = Integer.parseInt(args[6]);
-		}
-		if (args.length == 8) {
-			gui = Boolean.parseBoolean(args[0]);
-			conffile = args[1];
-			inputdata = args[2];
-			inputdata0 = args[3];
-			outputfile = args[4];
-			buf_size = Integer.parseInt(args[5]);
-			bandwidth = Integer.parseInt(args[6]);
-			look_buf_size = Integer.parseInt(args[7]);
-		} else {
-			System.out
-					.println("The input configuration should be gui (true/false), configure file name, input data file(s), output file name");
-		}
-
-		File file = new File(conffile);
-		BufferedReader reader = null;
-
-		try {
-			reader = new BufferedReader(new FileReader(conffile));
-			String text = null;
-			while ((text = reader.readLine()) != null) {
-				list.add(text);
-			}
-			reader = new BufferedReader(new FileReader(inputdata));
-			while ((text = reader.readLine()) != null) {
-				ArrayList<Integer> tmp = new ArrayList<Integer>();
-				Scanner fi = new Scanner(text);
-				fi.useDelimiter(" ");
-				while (true) {
-					if (fi.hasNext()) {
-						tmp.add(fi.nextInt());
-					} else
-						break;
-				}
-				input_data.add(tmp);
-
-			}
-			if (args.length == 8) {
-				reader = new BufferedReader(new FileReader(inputdata0));
-				while ((text = reader.readLine()) != null) {
-					ArrayList<Integer> tmp = new ArrayList<Integer>();
-					Scanner fi = new Scanner(text);
-					fi.useDelimiter(" ");
-					while (true) {
-						if (fi.hasNext()) {
-							tmp.add(fi.nextInt());
-						} else
-							break;
-					}
-					input_data0.add(tmp);
-
-				}
-			}
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (reader != null) {
-					reader.close();
-				}
-			} catch (IOException e) {
-			}
-		}
-		System.out.println(list);
-		simulator sim = new simulator();
-		int data_size = 0;
-
+	public static void composeconfigure(simulator sim, int data_size) {
 		if (list.get(0).equalsIgnoreCase("sorter")) {
 			String order = list.get(2);
 			int column_selector = Integer.parseInt(list.get(1));
@@ -796,7 +645,7 @@ public class simulator {
 						tmp.add("smaller");
 						tmp.add("keepon");
 						tmp.add("keepon");
-						//tmp.add(Integer.toString(column_selector));
+						// tmp.add(Integer.toString(column_selector));
 						tmp.add(Integer.toString(1));
 						conflist.add(tmp);
 					} else if (order.equalsIgnoreCase("increasing")) {
@@ -806,7 +655,7 @@ public class simulator {
 						tmp.add("larger");
 						tmp.add("keepon");
 						tmp.add("keepon");
-						//tmp.add(Integer.toString(column_selector));
+						// tmp.add(Integer.toString(column_selector));
 						tmp.add(Integer.toString(1));
 						conflist.add(tmp);
 					}
@@ -833,9 +682,9 @@ public class simulator {
 						tmp.add(fi.next());
 					}
 					conf_e.add(tmp.get(2));
-					ArrayList tmpf=new ArrayList();
+					ArrayList tmpf = new ArrayList();
 					tmpf.add(i);
-					//conf_e.add(Integer.toString(i));
+					// conf_e.add(Integer.toString(i));
 					conf_e.add(tmpf.toString());
 					conf_e.add("one_fix");
 					if (tmp.get(1).equals("<")) {
@@ -845,31 +694,30 @@ public class simulator {
 					} else if (tmp.get(1).equals(">")) {
 						conf_e.add("larger");
 					}
-					//if (i>1) {
-						conf_e.add("keepon_enter");
-						conf_e.add("keepon");
-						//}
-						//else {
-							//conf_e.add("keepon_enter_last");
-							//conf_e.add("keepon_last");
-						//}
-					//conf_e.add("keepon_enter");
-					//conf_e.add("keepon");
+					// if (i>1) {
+					conf_e.add("keepon_enter");
+					conf_e.add("keepon");
+					// }
+					// else {
+					// conf_e.add("keepon_enter_last");
+					// conf_e.add("keepon_last");
+					// }
+					// conf_e.add("keepon_enter");
+					// conf_e.add("keepon");
 					conf_e.add(tmp.get(0));
 					// System.out.println(list.get(conf_size-1));
 					java.util.List<String> item3 = new ArrayList();
 					item3 = Arrays.asList(list.get(conf_size - 1)
 							.substring(1, list.get(conf_size - 1).length() - 1)
 							.split("-"));
-					
-					//System.out.println(item3.get(i - 1));
+
+					// System.out.println(item3.get(i - 1));
 					conf_e.add(item3.get(i - 1));
 					conflist.add(conf_e);
 				}
 
 			}
 		}
-
 		if (list.get(0).equalsIgnoreCase("nested block join")) {
 			int column_selector = Integer.parseInt(list.get(1));
 			if (input_data.size() > pipeline_deepth) {
@@ -877,18 +725,18 @@ public class simulator {
 						.println("sorry, we cannot process the nested block join when both table size exceed the pipeline deepth");
 			} else {
 				data_size = input_data0.size();
-				//System.out.println("The data to set up configuration is ");
-				//System.out.println(input_data);
+				// System.out.println("The data to set up configuration is ");
+				// System.out.println(input_data);
 				for (int i = 0; i < input_data.size(); i++) {
-					//real_input = input_data0;
+					// real_input = input_data0;
 					ArrayList tmp = new ArrayList<String>();
 					ArrayList<String> conf_e = new ArrayList<String>();
 					ArrayList text = input_data.get(i);
 					conf_e.add(Integer.toString((Integer) text
 							.get(column_selector)));
-					//tmp=search_table0.get(0);
+					// tmp=search_table0.get(0);
 					conf_e.add(Integer.toString(i));
-					//conf_e.add(text.toString());
+					// conf_e.add(text.toString());
 					conf_e.add("one_fix");
 					if (list.get(3).equalsIgnoreCase("<")) {
 						conf_e.add("smaller");
@@ -897,18 +745,17 @@ public class simulator {
 					} else if (list.get(3).equalsIgnoreCase("=")) {
 						conf_e.add("equal_w");
 					}
-					if (i>0) {
-					conf_e.add("keepon_enter");
-					conf_e.add("keepon");
-					}
-					else {
+					if (i > 0) {
+						conf_e.add("keepon_enter");
+						conf_e.add("keepon");
+					} else {
 						conf_e.add("keepon_enter_last");
 						conf_e.add("keepon_last");
 					}
 					conf_e.add(Integer.toString(column_selector));
-					//conf_e.add(list.get(list.size() - 1));
+					// conf_e.add(list.get(list.size() - 1));
 					conflist.add(conf_e);
-					//System.out.println(conf_e);
+					// System.out.println(conf_e);
 				}
 			}
 		}
@@ -989,9 +836,92 @@ public class simulator {
 
 			}
 		}
-	//	if (list.get(0).equalsIgnoreCase("nested block join")
-		//		|| list.get(0).equalsIgnoreCase("nested block"))
-			//input_data = real_input;
+	}
+
+	public static void main(String[] args) throws Exception {
+		// ArrayList<ArrayList> real_input = null;
+		if (args.length == 7) {
+			gui = Boolean.parseBoolean(args[0]);
+			conffile = args[1];
+			inputdata = args[2];
+			outputfile = args[3];
+			buf_size = Integer.parseInt(args[4]);
+			bandwidth = Integer.parseInt(args[5]);
+			look_buf_size = Integer.parseInt(args[6]);
+		}
+		if (args.length == 8) {
+			gui = Boolean.parseBoolean(args[0]);
+			conffile = args[1];
+			inputdata = args[2];
+			inputdata0 = args[3];
+			outputfile = args[4];
+			buf_size = Integer.parseInt(args[5]);
+			bandwidth = Integer.parseInt(args[6]);
+			look_buf_size = Integer.parseInt(args[7]);
+		} else {
+			System.out
+					.println("The input configuration should be gui (true/false), configure file name, input data file(s), output file name");
+		}
+
+		File file = new File(conffile);
+		BufferedReader reader = null;
+
+		try {
+			reader = new BufferedReader(new FileReader(conffile));
+			String text = null;
+			while ((text = reader.readLine()) != null) {
+				list.add(text);
+			}
+			reader = new BufferedReader(new FileReader(inputdata));
+			while ((text = reader.readLine()) != null) {
+				ArrayList<Integer> tmp = new ArrayList<Integer>();
+				Scanner fi = new Scanner(text);
+				fi.useDelimiter(" ");
+				while (true) {
+					if (fi.hasNext()) {
+						tmp.add(fi.nextInt());
+					} else
+						break;
+				}
+				input_data.add(tmp);
+
+			}
+			if (args.length == 8) {
+				reader = new BufferedReader(new FileReader(inputdata0));
+				while ((text = reader.readLine()) != null) {
+					ArrayList<Integer> tmp = new ArrayList<Integer>();
+					Scanner fi = new Scanner(text);
+					fi.useDelimiter(" ");
+					while (true) {
+						if (fi.hasNext()) {
+							tmp.add(fi.nextInt());
+						} else
+							break;
+					}
+					input_data0.add(tmp);
+
+				}
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (reader != null) {
+					reader.close();
+				}
+			} catch (IOException e) {
+			}
+		}
+		System.out.println(list);
+		simulator sim = new simulator();
+		int data_size = 0;
+		composeconfigure(sim, data_size);
+		// if (list.get(0).equalsIgnoreCase("nested block join")
+		// || list.get(0).equalsIgnoreCase("nested block"))
+		// input_data = real_input;
 
 		BufferedReader buffer = null;
 
@@ -1025,266 +955,297 @@ public class simulator {
 		if (gui) {
 			f = true;
 			while (server != null) {
-				//while (clk<=set_clk) {
-				while (clk<=set_clk) {
-				if (clk > conflist.size() + 1 && !finish && !list.get(0).equalsIgnoreCase("sorter")) {
-					//System.out.println("haha, we are in nested block join, not finish");
-					if (done) {
-						finish = true;
-					}
-					if (!sim.pipeline[0].buffer_empty()) {
-						if (list.get(0).equalsIgnoreCase("nested block join")) {
-						sim.pipeline[0].lookaside_both(real_input, search_table0, search_table1, out_table);
-						finish = false;
+				// while (clk<=set_clk) {
+				while (clk <= set_clk) {
+					if (clk > conflist.size() + 1 && !finish
+							&& !list.get(0).equalsIgnoreCase("sorter")) {
+						// System.out.println("haha, we are in nested block join, not finish");
+						if (done) {
+							finish = true;
 						}
-						else {
-							out_table.add(sim.pipeline[0].get_buffer_one(bandwidth));
-						}
-						
-					}
-					if (real_input.size()!=0) {
-						finish = false;
-					}
-					int end = -1;
-					for (int j=1; j<conflist.size();j++) {
-					if (!sim.pipeline[j].buffer_empty()) {
-						end = j;
-					}
-					}
-					//System.out.println("haha end is here");
-					//System.out.println(end);
-					if ( end >=0) {
-						finish = false;
-					//for (int j=0; j<end; j++) {
-						for (int j=0; j<conflist.size()-1; j++) {
-						//if (sim.pipeline[j].buffer_empty()) {
-							int rm_counter = 0;
-							rm_counter = sim.pipeline[j].push_reverse(sim.pipeline[j+1].get_buffer(), bandwidth, buf_size, rm_counter);
-							sim.pipeline[j+1].set_buf_em(rm_counter);
-							
-						//}
-					}
-						//System.out.printf("we are checking the %d pipeline", end);
-						sim.pipeline[conflist.size()-1].check_stall(buf_size);
-					}
-				}
-				//while (clk<=set_clk) {
-				if (clk < conflist.size() + 1) {
-					//if (clk < 2 && list.get(0).equalsIgnoreCase("sorter")) {
-						//sim.seperate();
-					//}
-					sim.configure(conflist, clk);
-				}
-				// else if (clk < input_data.size() + conflist.size()*2+2) {
-				else if (!done) {
-					boolean all = true;
-
-					if (list.get(0).equalsIgnoreCase("sorter")) {
-						if (!sim.pipeline[conflist.size() - 1].get_lf()
-								|| !sim.pipeline[conflist.size() - 1].get_rf()) {
-							done = true;
-						}
-					} else {
-						if (clk > conflist.size() + real_input.size()) {
-							//System.out.println("trying to setup done");
-							for (int g = 0; g < conflist.size(); g++) {
-								if (!sim.pipeline[g].get_rf()
-										|| sim.pipeline[g].get_tmp0f()||real_input.size()!=0) {
-									all = false;
-								}
+						if (!sim.pipeline[0].buffer_empty()) {
+							if (list.get(0).equalsIgnoreCase(
+									"nested block join")) {
+								sim.pipeline[0]
+										.lookaside_both(real_input,
+												search_table0, search_table1,
+												out_table);
+								finish = false;
+							} else {
+								out_table.add(sim.pipeline[0]
+										.get_buffer_one(bandwidth));
 							}
-							if (all) {
+
+						}
+						if (real_input.size() != 0) {
+							finish = false;
+						}
+						int end = -1;
+						for (int j = 1; j < conflist.size(); j++) {
+							if (!sim.pipeline[j].buffer_empty()) {
+								end = j;
+							}
+						}
+						// System.out.println("haha end is here");
+						// System.out.println(end);
+						if (end >= 0) {
+							finish = false;
+							// for (int j=0; j<end; j++) {
+							for (int j = 0; j < conflist.size() - 1; j++) {
+								// if (sim.pipeline[j].buffer_empty()) {
+								int rm_counter = 0;
+								rm_counter = sim.pipeline[j].push_reverse(
+										sim.pipeline[j + 1].get_buffer(),
+										bandwidth, buf_size, rm_counter);
+								sim.pipeline[j + 1].set_buf_em(rm_counter);
+
+								// }
+							}
+							// System.out.printf("we are checking the %d pipeline",
+							// end);
+							sim.pipeline[conflist.size() - 1]
+									.check_stall(buf_size);
+						}
+					}
+					// while (clk<=set_clk) {
+					if (clk < conflist.size() + 1) {
+						// if (clk < 2 &&
+						// list.get(0).equalsIgnoreCase("sorter")) {
+						// sim.seperate();
+						// }
+						sim.configure(conflist, clk);
+					}
+					// else if (clk < input_data.size() + conflist.size()*2+2) {
+					else if (!done) {
+						boolean all = true;
+
+						if (list.get(0).equalsIgnoreCase("sorter")) {
+							if (!sim.pipeline[conflist.size() - 1].get_lf()
+									|| !sim.pipeline[conflist.size() - 1]
+											.get_rf()) {
 								done = true;
 							}
-						}
-					}
-
-					// bingyi's new code
-					stop = false;
-					for (int fl=0; fl<conflist.size(); fl++) {
-						if (sim.pipeline[fl].get_stall()) {
-							stop = true;
-						}
-					}
-					if (!stop) {
-					//	System.out.println("gosh, the input size is ");
-						//System.out.println(real_input);
-					if (real_input.size() != 0) {
-						//System.out.println("haha, we are in bingyi's new code");
-						//sim.pipeline[0].clock_move(input_data.get(0));
-						//input_data.remove(0);
-						
-						if (real_input.get(0).get(real_input.get(0).size()-1).equals("true")) {
-						//	System.out.println("in the get input stage");
-							//ArrayList ex_input = new ArrayList();
-							real_input.get(0).remove(real_input.get(0).size()-1);
-							if (list.get(0).equalsIgnoreCase("join or")||list.get(0).equalsIgnoreCase("join and")||list.get(0).equalsIgnoreCase("parallel processing")) {
-								sim.pipeline[0].clock_move_parallel(real_input.get(0), buf_size);
-							}
-							else {
-						sim.pipeline[0].clock_move(real_input.get(0), buf_size);
-							}
-						//System.out.println(real_input.get(0));
-						real_input.remove(0);
-						}
-						else {
-							sim.pipeline[0].last_clk_move(buf_size);
-						}
-						
-					} else {
-						sim.pipeline[0].last_clk_move(buf_size);
-					}
-
-					for (int j = 1; j < conflist.size(); j++) {
-						if (pipeline[j - 1].out_f()) {
-							//System.out.printf("the %d has a valid output\n",
-								//	j - 1);
-							if (list.get(0).equalsIgnoreCase("join or")||list.get(0).equalsIgnoreCase("parallel processing")||list.get(0).equalsIgnoreCase("join and")) {
-								pipeline[j].clock_move_parallel(pipeline[j - 1].get_out(), buf_size);
-							}
-							else {
-							pipeline[j].clock_move(pipeline[j - 1].get_out(), buf_size);
-							}
 						} else {
-							pipeline[j].last_clk_move(buf_size);
+							if (clk > conflist.size() + real_input.size()) {
+								// System.out.println("trying to setup done");
+								for (int g = 0; g < conflist.size(); g++) {
+									if (!sim.pipeline[g].get_rf()
+											|| sim.pipeline[g].get_tmp0f()
+											|| real_input.size() != 0) {
+										all = false;
+									}
+								}
+								if (all) {
+									done = true;
+								}
+							}
 						}
-					}
-					}
-				}
-				else if (!alldone && list.get(0).equalsIgnoreCase("sorter")) {
-					for (int j =0; j<conflist.size(); j++) {
-						sim.pipeline[j].push_to_buffer(j);
-					}
-					alldone = true;
-				}
-				else if (alldone && !finish && list.get(0).equalsIgnoreCase("sorter")) {
-					//System.out.println("test here or not");
-					finish = true;
-					if (!sim.pipeline[0].buffer_empty()) {
-						sim.pipeline[0].lookaside(search_table0, out_table);
-						finish = false;
-					}
-					int end = -1;
-					for (int j=1; j<conflist.size();j++) {
-					if (!sim.pipeline[j].buffer_empty()) {
-						end = j;
-					}
-					}
-					//System.out.println("haha end is here");
-					//System.out.println(end);
-					if ( end >=0) {
-						finish = false;
-					for (int j=0; j<end; j++) {
-						if (sim.pipeline[j].buffer_empty()) {
-							int rm_counter = 0;
-							rm_counter = sim.pipeline[j].push_reverse(sim.pipeline[j+1].get_buffer(), bandwidth, buf_size, rm_counter);
-							sim.pipeline[j+1].set_buf_em(rm_counter);
-							
-						}
-					}
-					
-					}
-					
-				}
-				//else if (done && !finish && list.get(0).equalsIgnoreCase("nested block join")) {
-			
-				
 
-				clk++;
-				if (clk<= set_clk)
-					state();
+						// bingyi's new code
+						stop = false;
+						for (int fl = 0; fl < conflist.size(); fl++) {
+							if (sim.pipeline[fl].get_stall()) {
+								stop = true;
+							}
+						}
+						if (!stop) {
+							// System.out.println("gosh, the input size is ");
+							// System.out.println(real_input);
+							if (real_input.size() != 0) {
+								// System.out.println("haha, we are in bingyi's new code");
+								// sim.pipeline[0].clock_move(input_data.get(0));
+								// input_data.remove(0);
+
+								if (real_input.get(0)
+										.get(real_input.get(0).size() - 1)
+										.equals("true")) {
+									// System.out.println("in the get input stage");
+									// ArrayList ex_input = new ArrayList();
+									real_input.get(0).remove(
+											real_input.get(0).size() - 1);
+									if (list.get(0).equalsIgnoreCase("join or")
+											|| list.get(0).equalsIgnoreCase(
+													"join and")
+											|| list.get(0).equalsIgnoreCase(
+													"parallel processing")) {
+										sim.pipeline[0].clock_move_parallel(
+												real_input.get(0), buf_size);
+									} else {
+										sim.pipeline[0].clock_move(
+												real_input.get(0), buf_size);
+									}
+									// System.out.println(real_input.get(0));
+									real_input.remove(0);
+								} else {
+									sim.pipeline[0].last_clk_move(buf_size);
+								}
+
+							} else {
+								sim.pipeline[0].last_clk_move(buf_size);
+							}
+
+							for (int j = 1; j < conflist.size(); j++) {
+								if (pipeline[j - 1].out_f()) {
+									// System.out.printf("the %d has a valid output\n",
+									// j - 1);
+									if (list.get(0).equalsIgnoreCase("join or")
+											|| list.get(0).equalsIgnoreCase(
+													"parallel processing")
+											|| list.get(0).equalsIgnoreCase(
+													"join and")) {
+										pipeline[j].clock_move_parallel(
+												pipeline[j - 1].get_out(),
+												buf_size);
+									} else {
+										pipeline[j].clock_move(
+												pipeline[j - 1].get_out(),
+												buf_size);
+									}
+								} else {
+									pipeline[j].last_clk_move(buf_size);
+								}
+							}
+						}
+					} else if (!alldone
+							&& list.get(0).equalsIgnoreCase("sorter")) {
+						for (int j = 0; j < conflist.size(); j++) {
+							sim.pipeline[j].push_to_buffer(j);
+						}
+						alldone = true;
+					} else if (alldone && !finish
+							&& list.get(0).equalsIgnoreCase("sorter")) {
+						// System.out.println("test here or not");
+						finish = true;
+						if (!sim.pipeline[0].buffer_empty()) {
+							sim.pipeline[0].lookaside(search_table0, out_table);
+							finish = false;
+						}
+						int end = -1;
+						for (int j = 1; j < conflist.size(); j++) {
+							if (!sim.pipeline[j].buffer_empty()) {
+								end = j;
+							}
+						}
+						// System.out.println("haha end is here");
+						// System.out.println(end);
+						if (end >= 0) {
+							finish = false;
+							for (int j = 0; j < end; j++) {
+								if (sim.pipeline[j].buffer_empty()) {
+									int rm_counter = 0;
+									rm_counter = sim.pipeline[j].push_reverse(
+											sim.pipeline[j + 1].get_buffer(),
+											bandwidth, buf_size, rm_counter);
+									sim.pipeline[j + 1].set_buf_em(rm_counter);
+
+								}
+							}
+
+						}
+
+					}
+					// else if (done && !finish &&
+					// list.get(0).equalsIgnoreCase("nested block join")) {
+
+					clk++;
+					if (clk <= set_clk)
+						state();
 				}
 				// sim.write_out(outputfile);
 				// running done..........
-				//System.out.println("we are in the cylce");
+				// System.out.println("we are in the cylce");
 				System.out.println(clk);
 				System.out.println(set_clk);
 				f = false;
 				if (!f)
 					refresh = 0;
 				server.replyState(state(), refresh);
-				//System.out.println("we are in the cylce huhu");
-				//System.out.println(clk);
-				//System.out.println(set_clk);
-			
-			
+				// System.out.println("we are in the cylce huhu");
+				// System.out.println(clk);
+				// System.out.println(set_clk);
+
 				while ((req = server.nextRequest(0)) == 'I' || req == 'X')
 					;
 				if (req == 'N') {
 					refresh = 0;
 					set_clk++;
 				}
-				if (req =='C') {
-					refresh =0;
+				if (req == 'C') {
+					refresh = 0;
 					set_clk = conflist.size();
 				}
 				if (req == 'F') {
 					refresh = 0;
-					set_clk = set_clk+conflist.size()*2+real_input.size()+5;
-					//set_clk =set_clk+5;
-				}
-				else if (req == 'P')
+					set_clk = set_clk + conflist.size() * 2 + real_input.size()
+							+ 5;
+					// set_clk =set_clk+5;
+				} else if (req == 'P')
 					refresh = 1;
 				f = false;
 			}
 		}
-		//bingyi's Sep 6th
+		// bingyi's Sep 6th
 		else {
 			sim.seperate_file();
 			writer = new PrintWriter("logfile", "UTF-8");
-			
+
 			System.out.println("The graphic interface is disabled...");
-			
-			//bingyi need to fix
+
+			// bingyi need to fix
 			while (!finish) {
 				statetofile();
-				if (clk > conflist.size() + 1 && !finish && !list.get(0).equalsIgnoreCase("sorter")) {
-					//System.out.println("haha, we are in nested block join, not finish");
+				if (clk > conflist.size() + 1 && !finish
+						&& !list.get(0).equalsIgnoreCase("sorter")) {
+					// System.out.println("haha, we are in nested block join, not finish");
 					if (done) {
 						finish = true;
 					}
 					if (!sim.pipeline[0].buffer_empty()) {
 						if (list.get(0).equalsIgnoreCase("nested block join")) {
 							System.out.println(real_input);
-						sim.pipeline[0].lookaside_both(real_input, search_table0, search_table1, out_table);
-						finish = false;
+							sim.pipeline[0].lookaside_both(real_input,
+									search_table0, search_table1, out_table);
+							finish = false;
+						} else {
+							out_table.add(sim.pipeline[0]
+									.get_buffer_one(bandwidth));
 						}
-						else {
-							out_table.add(sim.pipeline[0].get_buffer_one(bandwidth));
-						}
-						
+
 					}
-					if (real_input.size()!=0) {
+					if (real_input.size() != 0) {
 						finish = false;
 					}
 					int end = -1;
-					for (int j=1; j<conflist.size();j++) {
-					if (!sim.pipeline[j].buffer_empty()) {
-						end = j;
+					for (int j = 1; j < conflist.size(); j++) {
+						if (!sim.pipeline[j].buffer_empty()) {
+							end = j;
+						}
 					}
-					}
-					//System.out.println("haha end is here");
-					//System.out.println(end);
-					if ( end >=0) {
+					// System.out.println("haha end is here");
+					// System.out.println(end);
+					if (end >= 0) {
 						finish = false;
-					//for (int j=0; j<end; j++) {
-						for (int j=0; j<conflist.size()-1; j++) {
-						//if (sim.pipeline[j].buffer_empty()) {
+						// for (int j=0; j<end; j++) {
+						for (int j = 0; j < conflist.size() - 1; j++) {
+							// if (sim.pipeline[j].buffer_empty()) {
 							int rm_counter = 0;
-							rm_counter = sim.pipeline[j].push_reverse(sim.pipeline[j+1].get_buffer(), bandwidth, buf_size, rm_counter);
-							sim.pipeline[j+1].set_buf_em(rm_counter);
-							
-						//}
-					}
-					//	System.out.printf("we are checking the %d pipeline", end);
-						sim.pipeline[conflist.size()-1].check_stall(buf_size);
+							rm_counter = sim.pipeline[j].push_reverse(
+									sim.pipeline[j + 1].get_buffer(),
+									bandwidth, buf_size, rm_counter);
+							sim.pipeline[j + 1].set_buf_em(rm_counter);
+
+							// }
+						}
+						// System.out.printf("we are checking the %d pipeline",
+						// end);
+						sim.pipeline[conflist.size() - 1].check_stall(buf_size);
 					}
 				}
-				//while (clk<=set_clk) {
+				// while (clk<=set_clk) {
 				if (clk < conflist.size() + 1) {
-					//if (clk < 2 && list.get(0).equalsIgnoreCase("sorter")) {
-						//sim.seperate();
-					//}
+					// if (clk < 2 && list.get(0).equalsIgnoreCase("sorter")) {
+					// sim.seperate();
+					// }
 					sim.configure(conflist, clk);
 				}
 				// else if (clk < input_data.size() + conflist.size()*2+2) {
@@ -1298,10 +1259,11 @@ public class simulator {
 						}
 					} else {
 						if (clk > conflist.size() + real_input.size()) {
-							//System.out.println("trying to setup done");
+							// System.out.println("trying to setup done");
 							for (int g = 0; g < conflist.size(); g++) {
 								if (!sim.pipeline[g].get_rf()
-										|| sim.pipeline[g].get_tmp0f()||real_input.size()!=0) {
+										|| sim.pipeline[g].get_tmp0f()
+										|| real_input.size() != 0) {
 									all = false;
 								}
 							}
@@ -1313,7 +1275,7 @@ public class simulator {
 
 					// bingyi's new code
 					stop = false;
-					for (int fl=0; fl<conflist.size(); fl++) {
+					for (int fl = 0; fl < conflist.size(); fl++) {
 						if (sim.pipeline[fl].get_stall()) {
 							stop = true;
 						}
@@ -1322,125 +1284,175 @@ public class simulator {
 						stallcounter++;
 					}
 					if (!stop) {
-					//	System.out.println("gosh, the input size is ");
-						//System.out.println(real_input);
-					if (real_input.size() != 0) {
-						//System.out.println("haha, we are in bingyi's new code");
-						//sim.pipeline[0].clock_move(input_data.get(0));
-						//input_data.remove(0);
-						
-						if (real_input.get(0).get(real_input.get(0).size()-1).equals("true")) {
-						//	System.out.println("in the get input stage");
-							//ArrayList ex_input = new ArrayList();
-							real_input.get(0).remove(real_input.get(0).size()-1);
-							if (list.get(0).equalsIgnoreCase("join or")||list.get(0).equalsIgnoreCase("join and")||list.get(0).equalsIgnoreCase("parallel processing")) {
-								sim.pipeline[0].clock_move_parallel(real_input.get(0), buf_size);
+						// System.out.println("gosh, the input size is ");
+						// System.out.println(real_input);
+						if (real_input.size() != 0) {
+							// System.out.println("haha, we are in bingyi's new code");
+							// sim.pipeline[0].clock_move(input_data.get(0));
+							// input_data.remove(0);
+
+							if (real_input.get(0)
+									.get(real_input.get(0).size() - 1)
+									.equals("true")) {
+								// System.out.println("in the get input stage");
+								// ArrayList ex_input = new ArrayList();
+								real_input.get(0).remove(
+										real_input.get(0).size() - 1);
+								if (list.get(0).equalsIgnoreCase("join or")
+										|| list.get(0).equalsIgnoreCase(
+												"join and")
+										|| list.get(0).equalsIgnoreCase(
+												"parallel processing")) {
+									sim.pipeline[0].clock_move_parallel(
+											real_input.get(0), buf_size);
+								} else {
+									sim.pipeline[0].clock_move(
+											real_input.get(0), buf_size);
+								}
+								// System.out.println(real_input.get(0));
+								real_input.remove(0);
+							} else {
+								sim.pipeline[0].last_clk_move(buf_size);
 							}
-							else {
-						sim.pipeline[0].clock_move(real_input.get(0), buf_size);
-							}
-						//System.out.println(real_input.get(0));
-						real_input.remove(0);
-						}
-						else {
+
+						} else {
 							sim.pipeline[0].last_clk_move(buf_size);
 						}
-						
-					} else {
-						sim.pipeline[0].last_clk_move(buf_size);
-					}
 
-					for (int j = 1; j < conflist.size(); j++) {
-						if (pipeline[j - 1].out_f()) {
-							//System.out.printf("the %d has a valid output\n",
-								//	j - 1);
-							if (list.get(0).equalsIgnoreCase("join or")||list.get(0).equalsIgnoreCase("parallel processing")||list.get(0).equalsIgnoreCase("join and")) {
-								pipeline[j].clock_move_parallel(pipeline[j - 1].get_out(), buf_size);
+						for (int j = 1; j < conflist.size(); j++) {
+							if (pipeline[j - 1].out_f()) {
+								// System.out.printf("the %d has a valid output\n",
+								// j - 1);
+								if (list.get(0).equalsIgnoreCase("join or")
+										|| list.get(0).equalsIgnoreCase(
+												"parallel processing")
+										|| list.get(0).equalsIgnoreCase(
+												"join and")) {
+									pipeline[j]
+											.clock_move_parallel(
+													pipeline[j - 1].get_out(),
+													buf_size);
+								} else {
+									pipeline[j]
+											.clock_move(
+													pipeline[j - 1].get_out(),
+													buf_size);
+								}
+							} else {
+								pipeline[j].last_clk_move(buf_size);
 							}
-							else {
-							pipeline[j].clock_move(pipeline[j - 1].get_out(), buf_size);
-							}
-						} else {
-							pipeline[j].last_clk_move(buf_size);
 						}
 					}
-					}
-				}
-				else if (!alldone && list.get(0).equalsIgnoreCase("sorter")) {
-					for (int j =0; j<conflist.size(); j++) {
+				} else if (!alldone && list.get(0).equalsIgnoreCase("sorter")) {
+					for (int j = 0; j < conflist.size(); j++) {
 						sim.pipeline[j].push_to_buffer(j);
 					}
 					alldone = true;
-				}
-				else if (alldone && !finish && list.get(0).equalsIgnoreCase("sorter")) {
-					//System.out.println("test here or not");
+				} else if (alldone && !finish
+						&& list.get(0).equalsIgnoreCase("sorter")) {
+					// System.out.println("test here or not");
 					finish = true;
 					if (!sim.pipeline[0].buffer_empty()) {
 						sim.pipeline[0].lookaside(search_table0, out_table);
 						finish = false;
 					}
 					int end = -1;
-					for (int j=1; j<conflist.size();j++) {
-					if (!sim.pipeline[j].buffer_empty()) {
-						end = j;
-					}
-					}
-					//System.out.println("haha end is here");
-					//System.out.println(end);
-					if ( end >=0) {
-						finish = false;
-					for (int j=0; j<end; j++) {
-						if (sim.pipeline[j].buffer_empty()) {
-							int rm_counter = 0;
-							rm_counter = sim.pipeline[j].push_reverse(sim.pipeline[j+1].get_buffer(), bandwidth, buf_size, rm_counter);
-							sim.pipeline[j+1].set_buf_em(rm_counter);
-							
+					for (int j = 1; j < conflist.size(); j++) {
+						if (!sim.pipeline[j].buffer_empty()) {
+							end = j;
 						}
 					}
-					
+					// System.out.println("haha end is here");
+					// System.out.println(end);
+					if (end >= 0) {
+						finish = false;
+						for (int j = 0; j < end; j++) {
+							if (sim.pipeline[j].buffer_empty()) {
+								int rm_counter = 0;
+								rm_counter = sim.pipeline[j].push_reverse(
+										sim.pipeline[j + 1].get_buffer(),
+										bandwidth, buf_size, rm_counter);
+								sim.pipeline[j + 1].set_buf_em(rm_counter);
+
+							}
+						}
+
 					}
-					
+
 				}
-				//else if (done && !finish && list.get(0).equalsIgnoreCase("nested block join")) {
-			
-				
+				// else if (done && !finish &&
+				// list.get(0).equalsIgnoreCase("nested block join")) {
 
 				clk++;
-				//System.out.printf("clk is %d\n", clk);
-				}
-			//bingyi need to fix
+				// System.out.printf("clk is %d\n", clk);
+			}
+			// bingyi need to fix
 			if (finish) {
-				writer.printf("Finished at cycle %d, and the output is as following\n", clk);
+				writer.printf(
+						"Finished at cycle %d, and the output is as following\n",
+						clk);
 				writer.print(out_table);
-				System.out.printf("It took %d cycle to finish \nThe stall happens for %d\n", clk, stallcounter);
-				if (search_table0.size()>0 && search_table1.size()>0) {
-				System.out.printf("The size of search table 0 and search table 1 is %d and %d\n", search_table0.size()*search_table0.get(0).size(), search_table0.size()*search_table1.get(0).size());
-				}
-				else {
+				System.out
+						.printf("It took %d cycle to finish \nThe stall happens for %d\n",
+								clk, stallcounter);
+				if (search_table0.size() > 0 && search_table1.size() > 0) {
+					System.out
+							.printf("The size of search table 0 and search table 1 is %d and %d\n",
+									search_table0.size()
+											* search_table0.get(0).size(),
+									search_table1.size()
+											* search_table1.get(0).size());
+				} else if (search_table0.size() == 0
+						&& search_table1.size() > 0) {
+					System.out.printf("The size of search table 1 is %d \n",
+							search_table1.size() * search_table1.get(0).size());
+				} else if (search_table1.size() == 0
+						&& search_table0.size() > 0) {
+					System.out.printf("The size of search table 0 is %d \n",
+							search_table0.size() * search_table0.get(0).size());
+				} else {
 					System.out.println("we don't need a search table here");
 				}
 				int area_unit = 0;
-				if (pipeline[0].get_left().size()!=0 && pipeline[0].get_right().size()!=0 ) {
-				area_unit = pipeline[0].get_left().size()+pipeline[0].get_right().size()+2+buf_size*pipeline[0].get_bufferlength()+2*pipeline[0].get_tmpsize();
-				//System.out.printf("the left size is %d\n", pipeline[0].get_left().size());
-				//System.out.printf("the right size is %d\n", pipeline[0].get_right().size());
-				//System.out.printf("the buffer length is %d\n", pipeline[0].get_bufferlength());
-				//System.out.printf("the tmp and output size is %d\n", pipeline[0].get_tmpsize());
-				System.out.printf("the area in each unit is %d\n", area_unit);
-				}
-				else if (pipeline[0].get_left().size()!=0) {
-					area_unit = 2*pipeline[0].get_left().size()+2+buf_size*pipeline[0].get_bufferlength()+2*pipeline[0].get_tmpsize();
+				if (pipeline[0].get_left().size() != 0
+						&& pipeline[0].get_right().size() != 0) {
+					area_unit = pipeline[0].get_left().size()
+							+ pipeline[0].get_right().size() + 2 + buf_size
+							* pipeline[0].get_bufferlength() + 2
+							* pipeline[0].get_tmpsize();
+					// System.out.printf("the left size is %d\n",
+					// pipeline[0].get_left().size());
+					// System.out.printf("the right size is %d\n",
+					// pipeline[0].get_right().size());
+					// System.out.printf("the buffer length is %d\n",
+					// pipeline[0].get_bufferlength());
+					// System.out.printf("the tmp and output size is %d\n",
+					// pipeline[0].get_tmpsize());
+					System.out.printf("the area in each unit is %d\n",
+							area_unit);
+				} else if (pipeline[0].get_left().size() != 0) {
+					area_unit = 2 * pipeline[0].get_left().size() + 2
+							+ buf_size * pipeline[0].get_bufferlength() + 2
+							* pipeline[0].get_tmpsize();
+					System.out.println("it should be only sorter");
+				} else if (pipeline[0].get_right().size() != 0) {
+					area_unit = 2 * pipeline[0].get_right().size() + 2
+							+ buf_size * pipeline[0].get_bufferlength() + 2
+							* pipeline[0].get_tmpsize();
 					System.out.println("it should be only sorter");
 				}
-				else if (pipeline[0].get_right().size()!=0) {
-					area_unit = 2*pipeline[0].get_right().size()+2+buf_size*pipeline[0].get_bufferlength()+2*pipeline[0].get_tmpsize();
-					System.out.println("it should be only sorter");
-				}
 				System.out.printf("the area in each unit is %d\n", area_unit);
-				System.out.printf("the total area in the pipeline is %d\n", area_unit*conflist.size());
-				double throughput =(double)(input_data.size()*Math.max(pipeline[0].get_left().size(), pipeline[0].get_right().size()))/clk;
-				System.out.printf("the input data length is %d\n", input_data.size());
-				System.out.printf("the record input size is %d\n", Math.max(pipeline[0].get_left().size(), pipeline[0].get_right().size()));
+				System.out.printf("the total area in the pipeline is %d\n",
+						area_unit * conflist.size());
+				double throughput = (double) (input_data.size() * Math.max(
+						pipeline[0].get_left().size(), pipeline[0].get_right()
+								.size()))
+						/ clk;
+				System.out.printf("the input data length is %d\n",
+						input_data.size());
+				System.out.printf("the record input size is %d\n", Math.max(
+						pipeline[0].get_left().size(), pipeline[0].get_right()
+								.size()));
 				System.out.printf("the througput is %f", throughput);
 			}
 			writer.close();
@@ -1482,21 +1494,20 @@ public class simulator {
 
 	private static void inputToHtml(StringBuffer buf) {
 		if (!list.get(0).equalsIgnoreCase("nested block join")) {
-		buf.append("<div>");
-		buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
-				+ "Input Data" + "</div>\n");
-		for (int c = 0; c < input_data.size(); c++) {
-			String color = "white";
-			for (int f = 0; f < input_data.get(c).size(); f++) {
-				String cname = input_data.get(c).get(f).toString();
-				buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
-						+ color + "\">" + cname + "</div>\n");
+			buf.append("<div>");
+			buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
+					+ "Input Data" + "</div>\n");
+			for (int c = 0; c < input_data.size(); c++) {
+				String color = "white";
+				for (int f = 0; f < input_data.get(c).size(); f++) {
+					String cname = input_data.get(c).get(f).toString();
+					buf.append("<div style=\"width: 200px; height: 40px; font-size:20px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
+							+ color + "\">" + cname + "</div>\n");
+				}
+				buf.append("    <div style=\"clear:both;\"></div>\n");
 			}
-			buf.append("    <div style=\"clear:both;\"></div>\n");
-		}
-		buf.append("   </div>\n");
-		}
-		else {
+			buf.append("   </div>\n");
+		} else {
 			buf.append("<div>");
 			buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
 					+ "Input Data" + "</div>\n");
@@ -1595,117 +1606,115 @@ public class simulator {
 		buf.append("    <div style=\"clear:both;\"></div>\n");
 	}
 
-	//bingyi gui false state
+	// bingyi gui false state
 	private static void statetofile() {
-		
+
 		if (clk < conflist.size() + 1) {
-				if (clk ==0)
-					writer.println("Cycle "+clk + " Ready to start!");
-				else {
-					writer.printf("Cycle "+clk + ": pushing the configuration file ");
-					for (int i=clk-1; i>-1; i--) {
-						writer.print(conflist.get(i) + " ");
-					}
-					writer.print("\n");
+			if (clk == 0)
+				writer.println("Cycle " + clk + " Ready to start!");
+			else {
+				writer.printf("Cycle " + clk
+						+ ": pushing the configuration file ");
+				for (int i = clk - 1; i > -1; i--) {
+					writer.print(conflist.get(i) + " ");
 				}
+				writer.print("\n");
 			}
-		else {
-			writer.println("Cycle "+clk + " :");
-		for (int c = 0; c < conflist.size(); c++) {
-			if (pipeline[c].get_lchange()) {
-				writer.print("==>");
-			} else {
-				writer.print("   ");
-			}
-			if (pipeline[c].get_lf()) {
-				writer.print("empty[]");
-				
-				if (!pipeline[c].get_stall()) {
-				writer.print("    ");
+		} else {
+			writer.println("Cycle " + clk + " :");
+			for (int c = 0; c < conflist.size(); c++) {
+				if (pipeline[c].get_lchange()) {
+					writer.print("==>");
+				} else {
+					writer.print("   ");
 				}
-				else {
-					writer.print("stall");
-				}
-				
-			} else {
-				writer.print(pipeline[c].get_left());;
-				if (!pipeline[c].get_stall()) {
+				if (pipeline[c].get_lf()) {
+					writer.print("empty[]");
+
+					if (!pipeline[c].get_stall()) {
 						writer.print("    ");
-				}
-					else {
+					} else {
+						writer.print("stall");
+					}
+
+				} else {
+					writer.print(pipeline[c].get_left());
+					;
+					if (!pipeline[c].get_stall()) {
+						writer.print("    ");
+					} else {
 						writer.print(" stall");
 					}
+				}
+				writer.print("								");
 			}
-			writer.print("								");
-		}
-		writer.println();
-		
+			writer.println();
 
-		for (int c = 0; c < conflist.size(); c++) {
-			writer.print("					");
-			
-			boolean cname = pipeline[c].get_tmp0f();
-			
-			if (pipeline[c].get_tchange()) {
-				writer.print("==>");
-			} else {
-				writer.print("   ");
-			}
-			writer.print(cname);
-			writer.print(pipeline[c].get_tmp0());
-			writer.print("	");
-			if (pipeline[c].get_ochange()) {
-				buf.append("<div style=\"width: 60px; height: 20px; font-size:12px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid white; background-color: "
-						+ "white" + "\">" + "==>" + "</div>\n");
-			} else {
-				buf.append("    <div style=\"width: 60px; height: 20px; float:left;\"></div>\n");
-			}
-			// color = "yellow";
-			cname = pipeline[c].get_outf();
-			writer.print(cname);
-			writer.print(" ");
-			writer.print(pipeline[c].get_out_new());
-			writer.print("		");
-		}
-		writer.println();
-		
-		
-		for (int c = 0; c < conflist.size(); c++) {
-			if (pipeline[c].get_rchange()) {
-				writer.print("==>"); 
-			} else {
-				writer.print("   ");
-			}
-			if (pipeline[c].get_rf()) {
-				writer.print("empty[]");
-			} else {
-				writer.print(pipeline[c].get_rightr());
-				writer.print(pipeline[c].get_right());
-			}
-			writer.print("									");
-		}
-		writer.println();
+			for (int c = 0; c < conflist.size(); c++) {
+				writer.print("					");
 
-		for (int c = 0; c < conflist.size(); c++) {
-			writer.print("				");
-			if (pipeline[c].get_bchange()) {
-				writer.print("==>"); 
-			} else {
-				writer.print("   ");
+				boolean cname = pipeline[c].get_tmp0f();
+
+				if (pipeline[c].get_tchange()) {
+					writer.print("==>");
+				} else {
+					writer.print("   ");
+				}
+				writer.print(cname);
+				writer.print(pipeline[c].get_tmp0());
+				writer.print("	");
+				if (pipeline[c].get_ochange()) {
+					buf.append("<div style=\"width: 60px; height: 20px; font-size:12px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid white; background-color: "
+							+ "white" + "\">" + "==>" + "</div>\n");
+				} else {
+					buf.append("    <div style=\"width: 60px; height: 20px; float:left;\"></div>\n");
+				}
+				// color = "yellow";
+				cname = pipeline[c].get_outf();
+				writer.print(cname);
+				writer.print(" ");
+				writer.print(pipeline[c].get_out_new());
+				writer.print("		");
 			}
-			writer.print(pipeline[c].get_buffer());
-			
-			if (pipeline[c].get_brchange() ) {
-				writer.print("<==");
-			} else {
-				buf.append("    ");
+			writer.println();
+
+			for (int c = 0; c < conflist.size(); c++) {
+				if (pipeline[c].get_rchange()) {
+					writer.print("==>");
+				} else {
+					writer.print("   ");
+				}
+				if (pipeline[c].get_rf()) {
+					writer.print("empty[]");
+				} else {
+					writer.print(pipeline[c].get_rightr());
+					writer.print(pipeline[c].get_right());
+				}
+				writer.print("									");
 			}
-			writer.print("			");
-		}
-		writer.println();
+			writer.println();
+
+			for (int c = 0; c < conflist.size(); c++) {
+				writer.print("				");
+				if (pipeline[c].get_bchange()) {
+					writer.print("==>");
+				} else {
+					writer.print("   ");
+				}
+				writer.print(pipeline[c].get_buffer());
+
+				if (pipeline[c].get_brchange()) {
+					writer.print("<==");
+				} else {
+					buf.append("    ");
+				}
+				writer.print("			");
+			}
+			writer.println();
 		}
 	}
-	//bingyi gui false state
+
+	// bingyi gui false state
 	private static void StatetoHtml(StringBuffer buf) {
 		buf.append("    <div style=\"clear:both;\"></div>\n");
 		buf.append("<div>");
@@ -1731,16 +1740,15 @@ public class simulator {
 				buf.append("<div style=\"width: 100px; height: 40px; font-size:12px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
 						+ color + "\">" + cname0 + "</div>\n");
 				if (!pipeline[c].get_stall()) {
-				buf.append("    <div style=\"width: 340px; height: 80px; float:left;\"></div>\n");
-				}
-				else {
+					buf.append("    <div style=\"width: 340px; height: 80px; float:left;\"></div>\n");
+				} else {
 					color = "red";
 					String cname_tmp = "stall";
 					buf.append("<div style=\"width: 100px; height: 40px; font-size:12px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
 							+ color + "\">" + cname_tmp + "</div>\n");
 					buf.append("    <div style=\"width: 240px; height: 80px; float:left;\"></div>\n");
 				}
-				
+
 			} else {
 				String color = "purple";
 				int cname = pipeline[c].get_leftr();
@@ -1751,17 +1759,16 @@ public class simulator {
 				ArrayList cname0 = pipeline[c].get_left();
 				buf.append("<div style=\"width: 100px; height: 40px; font-size:12px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
 						+ color + "\">" + cname0 + "</div>\n");
-				//buf.append("    <div style=\"width: 340px; height: 80px; float:left;\"></div>\n");
+				// buf.append("    <div style=\"width: 340px; height: 80px; float:left;\"></div>\n");
 				if (!pipeline[c].get_stall()) {
 					buf.append("    <div style=\"width: 340px; height: 80px; float:left;\"></div>\n");
-					}
-					else {
-						color = "red";
-						String cname_tmp = "stall";
-						buf.append("<div style=\"width: 100px; height: 40px; font-size:12px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
-								+ color + "\">" + cname_tmp + "</div>\n");
-						buf.append("    <div style=\"width: 240px; height: 80px; float:left;\"></div>\n");
-					}
+				} else {
+					color = "red";
+					String cname_tmp = "stall";
+					buf.append("<div style=\"width: 100px; height: 40px; font-size:12px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
+							+ color + "\">" + cname_tmp + "</div>\n");
+					buf.append("    <div style=\"width: 240px; height: 80px; float:left;\"></div>\n");
+				}
 			}
 		}
 		buf.append("    <div style=\"clear:both;\"></div>\n");
@@ -1860,7 +1867,7 @@ public class simulator {
 			String color = "crimson";
 			ArrayList name = pipeline[c].get_buffer();
 			buf.append("    <div style=\"width: 200px; height: 80px; float:left;\"></div>\n");
-			//if (!pipeline[c].get_brchange()&&pipeline[c].get_bchange()) {
+			// if (!pipeline[c].get_brchange()&&pipeline[c].get_bchange()) {
 			if (pipeline[c].get_bchange()) {
 				buf.append("<div style=\"width: 30px; height: 20px; font-size:12px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid white; background-color: "
 						+ "white" + "\">" + "==>" + "</div>\n");
@@ -1870,7 +1877,7 @@ public class simulator {
 			buf.append("<div style=\"width: 170px; height: 80px; font-size:12px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid black; background-color: "
 					+ color + "\">" + name + "</div>\n");
 			buf.append("    <div style=\"width: 80px; height: 80px; float:left;\"></div>\n");
-			if (pipeline[c].get_brchange() ) {
+			if (pipeline[c].get_brchange()) {
 				buf.append("<div style=\"width: 30px; height: 20px; font-size:12px; font-weight:bold;font-family:'Comic Sans MS', cursive, sans-serif;text-align:center;float:left; border: 1px solid white; background-color: "
 						+ "white" + "\">" + "<==" + "</div>\n");
 			} else {
@@ -1884,11 +1891,11 @@ public class simulator {
 		buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
 				+ "Simulator Configuration Setup" + "</div>\n");
 		buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
-				+ "buf_size"+buf_size + "</div>\n");
+				+ "buf_size" + buf_size + "</div>\n");
 		buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
-				+ "bandwidth"+bandwidth + "</div>\n");
+				+ "bandwidth" + bandwidth + "</div>\n");
 		buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
-				+ "look_buf_size"+look_buf_size + "</div>\n");
+				+ "look_buf_size" + look_buf_size + "</div>\n");
 		for (int i = 0; i < list.size(); i++) {
 			buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
 					+ list.get(i) + "</div>\n");
@@ -1925,10 +1932,8 @@ public class simulator {
 	}
 
 	private static String state() {
-
 		int pixels = 5000;
 		String title = "Simulator";
-
 		buf.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n");
 		buf.append("<html xmlns=\"http://www.w3.org/1999/xhtml\" dir=\"ltr\" lang=\"en-US\" xml:lang=\"en\">\n");
 		buf.append("<head>\n");
@@ -1949,7 +1954,7 @@ public class simulator {
 		// left part
 		buf.append("  <div style=\"width: 5000px; float: left;\">\n");
 		if (clk == 0) {
-			//System.out.println("following we should seperate buf");
+			// System.out.println("following we should seperate buf");
 			ConfToHtml(buf);
 			buf.append("   <div style=\"width: 600px; height: 50px;\"></div>\n");
 			buf.append("   <div style=\"clear:both;\"></div>\n");
@@ -1994,10 +1999,10 @@ public class simulator {
 			if (list.get(0).equalsIgnoreCase("nested block join")) {
 				output(buf);
 			}
-			if (list.get(0).equalsIgnoreCase("parallel processing")){
+			if (list.get(0).equalsIgnoreCase("parallel processing")) {
 				output(buf);
 			}
-		} else if (done && !finish && conflist.get(0).equals("sorter")) {
+		} else if (done && !finish && list.get(0).equals("sorter")) {
 			System.out.println(conflist.get(0));
 			buf.append("<div style=\"width: 2000px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
 					+ "Sorter Done and Start LookingAside Stage." + "</div>\n");
@@ -2005,19 +2010,20 @@ public class simulator {
 			System.out.println("haha, we should be here, srt");
 			output(buf);
 		}
-		
+
 		else if (finish) {
 			buf.append("<div style=\"width: 2000px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
 					+ "Finally done!" + "</div>\n");
 			output(buf);
-		}
-		else {
-			if (clk > conflist.size() + 1 ) {
-			buf.append("<div style=\"width: 2000px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
-					+ "Waiting for the input data to enter the look aside buffer" + "</div>\n");
-			StatetoHtml(buf);
-			//System.out.println("haha, we should be here, srt");
-			output(buf);
+		} else {
+			// System.out.println(list.get(0));
+			if (clk > conflist.size() + 1) {
+				buf.append("<div style=\"width: 2000px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
+						+ "Waiting for the input data to enter the look aside buffer"
+						+ "</div>\n");
+				StatetoHtml(buf);
+				// System.out.println("haha, we should be here, srt");
+				output(buf);
 			}
 		}
 		// space above
