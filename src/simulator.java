@@ -8,6 +8,8 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
+import java.util.Scanner;
 import java.util.Scanner;
 
 public class simulator {
@@ -839,8 +841,41 @@ public class simulator {
 	}
 
 	public static void main(String[] args) throws Exception {
+		PrintWriter writer0 = new PrintWriter("data0", "UTF-8");
+		PrintWriter writer1 = new PrintWriter("data", "UTF-8");
+		Random rand = new Random();
+		for (int i=0; i<128; i++) {
+			for (int j=0; j<15; j++) {
+				writer0.printf("%d ", rand.nextInt(1000));
+			}
+			writer0.printf("\n");
+		}
+		for (int i=0; i<128; i++) {
+			for (int j=0; j<14; j++) {
+				writer1.printf("%d ", rand.nextInt(1000));
+			}
+			writer1.printf("\n");
+		}
+		writer0.close();
+		writer1.close();
+		Scanner keyboard = new Scanner(System.in);
+		System.out.println("Do you want to enable the graphic interface? (true/false)");
+		gui = keyboard.nextBoolean();
+		System.out.println("Could you please specify the configuration file's name?");
+		conffile = keyboard.next();
+		System.out.println("Could you please specify the data file's name?");
+		inputdata = keyboard.next();
+		System.out.println("Could you please specify the second data file's name?");
+		inputdata0 = keyboard.next();
+		System.out.println("Could you please specify the buffer size for the buffer in each unit?");
+		buf_size = keyboard.nextInt();
+		System.out.println("Could you please specify the bandwidth between each unit?");
+		bandwidth = keyboard.nextInt();
+		System.out.println("Could you please specify the look aside buffer size on the end of the pipeline?");
+		look_buf_size = keyboard.nextInt();
+		
 		// ArrayList<ArrayList> real_input = null;
-		if (args.length == 7) {
+		/*if (args.length == 7) {
 			gui = Boolean.parseBoolean(args[0]);
 			conffile = args[1];
 			inputdata = args[2];
@@ -862,7 +897,7 @@ public class simulator {
 			System.out
 					.println("The input configuration should be gui (true/false), configure file name, input data file(s), output file name");
 		}
-
+		*/
 		File file = new File(conffile);
 		BufferedReader reader = null;
 
@@ -1250,6 +1285,7 @@ public class simulator {
 				}
 				// else if (clk < input_data.size() + conflist.size()*2+2) {
 				else if (!done) {
+					
 					boolean all = true;
 
 					if (list.get(0).equalsIgnoreCase("sorter")) {
@@ -1290,7 +1326,7 @@ public class simulator {
 							// System.out.println("haha, we are in bingyi's new code");
 							// sim.pipeline[0].clock_move(input_data.get(0));
 							// input_data.remove(0);
-
+							//System.out.println(clk);
 							if (real_input.get(0)
 									.get(real_input.get(0).size() - 1)
 									.equals("true")) {
@@ -1348,6 +1384,7 @@ public class simulator {
 						sim.pipeline[j].push_to_buffer(j);
 					}
 					alldone = true;
+					
 				} else if (alldone && !finish
 						&& list.get(0).equalsIgnoreCase("sorter")) {
 					// System.out.println("test here or not");
@@ -1388,10 +1425,19 @@ public class simulator {
 			}
 			// bingyi need to fix
 			if (finish) {
-				writer.printf(
+				PrintWriter writer2 = new PrintWriter("output", "UTF-8");
+				writer2.printf(
 						"Finished at cycle %d, and the output is as following\n",
 						clk);
-				writer.print(out_table);
+				for (int i =0; i<out_table.size(); i++) {
+					for (int j=1; j<out_table.get(0).size(); j++) {
+						writer2.print(out_table.get(i).get(j));
+						writer2.print(" ");
+					}
+					writer2.printf("\n");
+				}
+				
+				writer2.close();
 				System.out
 						.printf("It took %d cycle to finish \nThe stall happens for %d\n",
 								clk, stallcounter);
