@@ -8,6 +8,8 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Scanner;
@@ -626,6 +628,235 @@ public class simulator {
 		writer.println(tmp);
 		writer.close();
 	}
+	
+	public static void supposedoutput() {
+		PrintWriter correctout = new PrintWriter("corretoutput", "UTF-8");
+		if (list.get(0).equalsIgnoreCase("sorter")) {
+			String order = list.get(2);
+			final int column_selector = Integer.parseInt(list.get(1));
+			/*class CustomComparator implements Comparator<ArrayList<Integer>> {
+			    @Override
+			    public int compare(ArrayList o1, ArrayList o2) {
+			        return Integer.parseInt((String) o1.get(column_selector))<Integer.parseInt((String) o2.get(column_selector)) ? 1: (Integer.parseInt((String) o1.get(column_selector)) > Integer.parseInt((String) o2.get(column_selector)) ? 1:0);
+			    }
+			}*/
+			Collections.sort(input_data,new Comparator<ArrayList>() {
+	            public int compare(String[] strings, String[] otherStrings) {
+	                return strings[1].compareTo(otherStrings[1]);
+	            }
+
+				@Override
+				public int compare(ArrayList arg0, ArrayList arg1) {
+					// TODO Auto-generated method stub
+					//return 0;
+					return Integer.parseInt((String) o1.get(column_selector))<Integer.parseInt((String) o2.get(column_selector)) ? 1: (Integer.parseInt((String) o1.get(column_selector)) > Integer.parseInt((String) o2.get(column_selector)) ? 1:0);
+				    
+				}
+	        });
+			Collections.sort(input_data);
+			data_size = input_data.size();
+
+				for (int i = 0; i < data_size; i++) {
+					ArrayList<String> tmp = new ArrayList<String>();
+					if (order.equalsIgnoreCase("decreasing")) {
+						tmp.add(Integer.toString(0));
+						tmp.add(Integer.toString(0));
+						tmp.add("non_fix");
+						tmp.add("smaller");
+						tmp.add("keepon");
+						tmp.add("keepon");
+						// tmp.add(Integer.toString(column_selector));
+						tmp.add(Integer.toString(1));
+						conflist.add(tmp);
+					} else if (order.equalsIgnoreCase("increasing")) {
+						tmp.add(Integer.toString(0));
+						tmp.add(Integer.toString(0));
+						tmp.add("non_fix");
+						tmp.add("larger");
+						tmp.add("keepon");
+						tmp.add("keepon");
+						// tmp.add(Integer.toString(column_selector));
+						tmp.add(Integer.toString(1));
+						conflist.add(tmp);
+					}
+				}
+				look_buf_size = conflist.size();
+			
+		}
+		if (list.get(0).equalsIgnoreCase("parallel processing")) {
+			int conf_size;
+			data_size = input_data.size();
+			conf_size = list.size();
+			if (conf_size > sim.pipeline_deepth) {
+				System.out
+						.format("sorry, we can only process less than %d parallel queries\n",
+								sim.pipeline_deepth);
+			} else {
+				for (int i = 1; i < conf_size - 1; i++) {
+					ArrayList<String> tmp = new ArrayList<String>();
+					ArrayList<String> conf_e = new ArrayList<String>();
+					String text = list.get(i);
+					Scanner fi = new Scanner(text);
+					fi.useDelimiter(" ");
+					while (fi.hasNext()) {
+						tmp.add(fi.next());
+					}
+					conf_e.add(tmp.get(2));
+					ArrayList tmpf = new ArrayList();
+					tmpf.add(i);
+					// conf_e.add(Integer.toString(i));
+					conf_e.add(tmpf.toString());
+					conf_e.add("one_fix");
+					if (tmp.get(1).equals("<")) {
+						conf_e.add("smaller");
+					} else if (tmp.get(1).equals("=")) {
+						conf_e.add("equal_w");
+					} else if (tmp.get(1).equals(">")) {
+						conf_e.add("larger");
+					}
+					// if (i>1) {
+					conf_e.add("keepon_enter");
+					conf_e.add("keepon");
+					// }
+					// else {
+					// conf_e.add("keepon_enter_last");
+					// conf_e.add("keepon_last");
+					// }
+					// conf_e.add("keepon_enter");
+					// conf_e.add("keepon");
+					conf_e.add(tmp.get(0));
+					// System.out.println(list.get(conf_size-1));
+					java.util.List<String> item3 = new ArrayList();
+					item3 = Arrays.asList(list.get(conf_size - 1)
+							.substring(1, list.get(conf_size - 1).length() - 1)
+							.split("-"));
+
+					// System.out.println(item3.get(i - 1));
+					conf_e.add(item3.get(i - 1));
+					conflist.add(conf_e);
+				}
+
+			}
+		}
+		if (list.get(0).equalsIgnoreCase("nested block join")) {
+			int column_selector = Integer.parseInt(list.get(1));
+			if (input_data.size() > pipeline_deepth) {
+				System.out
+						.println("sorry, we cannot process the nested block join when both table size exceed the pipeline deepth");
+			} else {
+				data_size = input_data0.size();
+				// System.out.println("The data to set up configuration is ");
+				// System.out.println(input_data);
+				for (int i = 0; i < input_data.size(); i++) {
+					// real_input = input_data0;
+					ArrayList tmp = new ArrayList<String>();
+					ArrayList<String> conf_e = new ArrayList<String>();
+					ArrayList text = input_data.get(i);
+					conf_e.add(Integer.toString((Integer) text
+							.get(column_selector)));
+					// tmp=search_table0.get(0);
+					conf_e.add(Integer.toString(i));
+					// conf_e.add(text.toString());
+					conf_e.add("one_fix");
+					if (list.get(3).equalsIgnoreCase("<")) {
+						conf_e.add("smaller");
+					} else if (list.get(3).equalsIgnoreCase(">")) {
+						conf_e.add("larger");
+					} else if (list.get(3).equalsIgnoreCase("=")) {
+						conf_e.add("equal_w");
+					}
+					if (i > 0) {
+						conf_e.add("keepon_enter");
+						conf_e.add("keepon");
+					} else {
+						conf_e.add("keepon_enter_last");
+						conf_e.add("keepon_last");
+					}
+					conf_e.add(Integer.toString(column_selector));
+					// conf_e.add(list.get(list.size() - 1));
+					conflist.add(conf_e);
+					// System.out.println(conf_e);
+				}
+			}
+		}
+		if (list.get(0).equalsIgnoreCase("join and")) {
+			int conf_size;
+			data_size = input_data.size();
+			conf_size = list.size();
+			if (conf_size > sim.pipeline_deepth) {
+				System.out.format(
+						"sorry, we can only process less than %d join and\n",
+						sim.pipeline_deepth);
+			} else {
+				for (int i = 1; i < conf_size - 1; i++) {
+					ArrayList<String> tmp = new ArrayList<String>();
+					ArrayList<String> conf_e = new ArrayList<String>();
+					String text = list.get(i);
+					Scanner fi = new Scanner(text);
+					fi.useDelimiter(" ");
+					while (fi.hasNext()) {
+						tmp.add(fi.next());
+					}
+					conf_e.add(tmp.get(2));
+					conf_e.add(Integer.toString(0));
+					conf_e.add("one_fix");
+					if (tmp.get(1).equals("<")) {
+						conf_e.add("smaller");
+					} else if (tmp.get(1).equals("=")) {
+						conf_e.add("equal_w");
+					} else if (tmp.get(1).equals(">")) {
+						conf_e.add("larger");
+					}
+					if (i != 1)
+						conf_e.add("keepon");
+					else
+						conf_e.add("enter_buffer");
+					conf_e.add("discard");
+					conf_e.add(tmp.get(0));
+					conf_e.add(list.get(list.size() - 1));
+					conflist.add(conf_e);
+				}
+
+			}
+		}
+		if (list.get(0).equalsIgnoreCase("join or")) {
+			int conf_size;
+			data_size = input_data.size();
+			conf_size = list.size();
+			if (conf_size > sim.pipeline_deepth) {
+				System.out.format(
+						"sorry, we can only process less than %d join and\n",
+						sim.pipeline_deepth);
+			} else {
+				for (int i = 1; i < conf_size - 1; i++) {
+					ArrayList<String> tmp = new ArrayList<String>();
+					ArrayList<String> conf_e = new ArrayList<String>();
+					String text = list.get(i);
+					Scanner fi = new Scanner(text);
+					fi.useDelimiter(" ");
+					while (fi.hasNext()) {
+						tmp.add(fi.next());
+					}
+					conf_e.add(tmp.get(2));
+					conf_e.add(Integer.toString(0));
+					conf_e.add("one_fix");
+					if (tmp.get(1).equals("<")) {
+						conf_e.add("smaller");
+					} else if (tmp.get(1).equals("=")) {
+						conf_e.add("equal_w");
+					} else if (tmp.get(1).equals(">")) {
+						conf_e.add("larger");
+					}
+					conf_e.add("enter_buffer");
+					conf_e.add("keepon");
+					conf_e.add(tmp.get(0));
+					conf_e.add(list.get(list.size() - 1));
+					conflist.add(conf_e);
+				}
+
+			}
+		}
+	}
 
 	public static void composeconfigure(simulator sim, int data_size) {
 		if (list.get(0).equalsIgnoreCase("sorter")) {
@@ -921,7 +1152,7 @@ public class simulator {
 				input_data.add(tmp);
 
 			}
-			if (args.length == 8) {
+			if (list.get(0).equalsIgnoreCase("nested block join")) {
 				reader = new BufferedReader(new FileReader(inputdata0));
 				while ((text = reader.readLine()) != null) {
 					ArrayList<Integer> tmp = new ArrayList<Integer>();
