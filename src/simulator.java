@@ -1,3 +1,4 @@
+import java.awt.List;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,6 +37,7 @@ public class simulator {
 
 	static PrintWriter writer;
 	static int stallcounter;
+	static int column_selector;
 	// static int preprocesscounter;
 	// static int end_area;
 	// static int area_pipleline;
@@ -629,70 +631,65 @@ public class simulator {
 		writer.close();
 	}
 	
-	public static void supposedoutput() {
-		PrintWriter correctout = new PrintWriter("corretoutput", "UTF-8");
+	public class CustomComparator implements Comparator<ArrayList> {
+	    @Override
+	    public int compare(ArrayList o1, ArrayList o2) {
+	        return Integer.parseInt((String) o1.get(column_selector))<Integer.parseInt((String) (o2.get(column_selector)))?1:0;
+	    }
+	}
+	
+	
+	public void supposedoutput() {
+		ArrayList<ArrayList> copyinput = new ArrayList<ArrayList>();
+		PrintWriter correctout = null;
+		
+		try {
+			correctout = new PrintWriter("corretoutput", "UTF-8");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		if (list.get(0).equalsIgnoreCase("sorter")) {
+			java.util.List<String> item0 = new ArrayList();
+			item0 = Arrays.asList(list.get(list.size() - 1)
+					.substring(1, list.get(list.size() - 1).length() - 1)
+					.split(","));
 			String order = list.get(2);
 			final int column_selector = Integer.parseInt(list.get(1));
-			/*class CustomComparator implements Comparator<ArrayList<Integer>> {
+			
+			class CustomComparator0 implements Comparator<ArrayList> {
 			    @Override
 			    public int compare(ArrayList o1, ArrayList o2) {
-			        return Integer.parseInt((String) o1.get(column_selector))<Integer.parseInt((String) o2.get(column_selector)) ? 1: (Integer.parseInt((String) o1.get(column_selector)) > Integer.parseInt((String) o2.get(column_selector)) ? 1:0);
+			        return (Integer)(o1.get(column_selector))<(Integer)(o2.get(column_selector))?1:0;
 			    }
-			}*/
-			Collections.sort(input_data,new Comparator<ArrayList>() {
-	            public int compare(String[] strings, String[] otherStrings) {
-	                return strings[1].compareTo(otherStrings[1]);
-	            }
-
-				@Override
-				public int compare(ArrayList arg0, ArrayList arg1) {
-					// TODO Auto-generated method stub
-					//return 0;
-					return Integer.parseInt((String) o1.get(column_selector))<Integer.parseInt((String) o2.get(column_selector)) ? 1: (Integer.parseInt((String) o1.get(column_selector)) > Integer.parseInt((String) o2.get(column_selector)) ? 1:0);
-				    
+			}
+			class CustomComparator1 implements Comparator<ArrayList> {
+			    @Override
+			    public int compare(ArrayList o1, ArrayList o2) {
+			        return (Integer)(o1.get(column_selector))>(Integer)(o2.get(column_selector))?1:0;
+			    }
+			}
+			copyinput = input_data;
+			if (list.get(2).equalsIgnoreCase("increasing")) {
+			Collections.sort(copyinput, new CustomComparator1());
+			}
+			else {
+				Collections.sort(copyinput, new CustomComparator0());
+			}
+			for (int i=0; i<copyinput.size(); i++) {
+				for (int j=0; j<item0.size(); j++) {
+				correctout.print(copyinput.get(i).get(Integer.parseInt(item0.get(j))));
+				correctout.print(" ");
 				}
-	        });
-			Collections.sort(input_data);
-			data_size = input_data.size();
-
-				for (int i = 0; i < data_size; i++) {
-					ArrayList<String> tmp = new ArrayList<String>();
-					if (order.equalsIgnoreCase("decreasing")) {
-						tmp.add(Integer.toString(0));
-						tmp.add(Integer.toString(0));
-						tmp.add("non_fix");
-						tmp.add("smaller");
-						tmp.add("keepon");
-						tmp.add("keepon");
-						// tmp.add(Integer.toString(column_selector));
-						tmp.add(Integer.toString(1));
-						conflist.add(tmp);
-					} else if (order.equalsIgnoreCase("increasing")) {
-						tmp.add(Integer.toString(0));
-						tmp.add(Integer.toString(0));
-						tmp.add("non_fix");
-						tmp.add("larger");
-						tmp.add("keepon");
-						tmp.add("keepon");
-						// tmp.add(Integer.toString(column_selector));
-						tmp.add(Integer.toString(1));
-						conflist.add(tmp);
-					}
-				}
-				look_buf_size = conflist.size();
-			
+				correctout.print("\n");
+			}	
+			correctout.close();
 		}
 		if (list.get(0).equalsIgnoreCase("parallel processing")) {
-			int conf_size;
-			data_size = input_data.size();
-			conf_size = list.size();
-			if (conf_size > sim.pipeline_deepth) {
-				System.out
-						.format("sorry, we can only process less than %d parallel queries\n",
-								sim.pipeline_deepth);
-			} else {
-				for (int i = 1; i < conf_size - 1; i++) {
+			for (int i = 1; i < list.size()-1; i++) {
 					ArrayList<String> tmp = new ArrayList<String>();
 					ArrayList<String> conf_e = new ArrayList<String>();
 					String text = list.get(i);
@@ -701,44 +698,39 @@ public class simulator {
 					while (fi.hasNext()) {
 						tmp.add(fi.next());
 					}
-					conf_e.add(tmp.get(2));
-					ArrayList tmpf = new ArrayList();
-					tmpf.add(i);
-					// conf_e.add(Integer.toString(i));
-					conf_e.add(tmpf.toString());
-					conf_e.add("one_fix");
-					if (tmp.get(1).equals("<")) {
-						conf_e.add("smaller");
+					/*if (tmp.get(1).equals("<")) {
+						//conf_e.add("smaller");
 					} else if (tmp.get(1).equals("=")) {
-						conf_e.add("equal_w");
+						//conf_e.add("equal_w");
 					} else if (tmp.get(1).equals(">")) {
-						conf_e.add("larger");
+						//conf_e.add("larger");
 					}
-					// if (i>1) {
-					conf_e.add("keepon_enter");
-					conf_e.add("keepon");
-					// }
-					// else {
-					// conf_e.add("keepon_enter_last");
-					// conf_e.add("keepon_last");
-					// }
-					// conf_e.add("keepon_enter");
-					// conf_e.add("keepon");
-					conf_e.add(tmp.get(0));
+				*/
 					// System.out.println(list.get(conf_size-1));
 					java.util.List<String> item3 = new ArrayList();
-					item3 = Arrays.asList(list.get(conf_size - 1)
-							.substring(1, list.get(conf_size - 1).length() - 1)
+					item3 = Arrays.asList(list.get(list.size() - 1)
+							.substring(1, list.get(list.size() - 1).length() - 1)
 							.split("-"));
-
-					// System.out.println(item3.get(i - 1));
+					for (int j=0; j<input_data.size(); j++){
+						if (tmp.get(1).equals("<")) {
+							if (Integer.parseInt((String) input_data.get(j).get(Integer.parseInt(tmp.get(0)))) < Integer.parseInt(tmp.get(2))) {
+								ArrayList itemunit = new ArrayList();
+								itemunit = item3.get(i - 1);
+							}
+						} else if (tmp.get(1).equals("=")) {
+							//conf_e.add("equal_w");
+						} else if (tmp.get(1).equals(">")) {
+							//conf_e.add("larger");
+						}
+						
+					}
 					conf_e.add(item3.get(i - 1));
 					conflist.add(conf_e);
 				}
 
-			}
+			
 		}
-		if (list.get(0).equalsIgnoreCase("nested block join")) {
+		/*if (list.get(0).equalsIgnoreCase("nested block join")) {
 			int column_selector = Integer.parseInt(list.get(1));
 			if (input_data.size() > pipeline_deepth) {
 				System.out
@@ -855,7 +847,7 @@ public class simulator {
 				}
 
 			}
-		}
+		}*/
 	}
 
 	public static void composeconfigure(simulator sim, int data_size) {
@@ -1183,6 +1175,7 @@ public class simulator {
 		}
 		System.out.println(list);
 		simulator sim = new simulator();
+		
 		int data_size = 0;
 		composeconfigure(sim, data_size);
 		// if (list.get(0).equalsIgnoreCase("nested block join")
@@ -1453,6 +1446,7 @@ public class simulator {
 		// bingyi's Sep 6th
 		else {
 			sim.seperate_file();
+			sim.supposedoutput();
 			writer = new PrintWriter("logfile", "UTF-8");
 
 			System.out.println("The graphic interface is disabled...");
@@ -1473,6 +1467,7 @@ public class simulator {
 									search_table0, search_table1, out_table);
 							finish = false;
 						} else {
+							//System.out.println("we should get the output");
 							out_table.add(sim.pipeline[0]
 									.get_buffer_one(bandwidth));
 						}
@@ -1660,14 +1655,27 @@ public class simulator {
 				writer2.printf(
 						"Finished at cycle %d, and the output is as following\n",
 						clk);
+				//System.out.printf("out_table size is %d\n", out_table.size());
 				for (int i =0; i<out_table.size(); i++) {
-					for (int j=1; j<out_table.get(0).size(); j++) {
+					if (list.get(0).equalsIgnoreCase("sorter")) {
+					for (int j=1; j<out_table.get(i).size(); j++) {
+						//System.out.print("haha");
+						//System.out.print(out_table.get(i).get(j));
 						writer2.print(out_table.get(i).get(j));
 						writer2.print(" ");
 					}
+					}
+					else {
+					//	for (int j=0; j<out_table.get(i).size(); j++) {
+						//	System.out.print("haha");
+						//	System.out.print(out_table.get(i).get(j));
+							//writer2.print(out_table.get(i).get(j));
+						writer2.print(out_table.get(i));
+							writer2.print(" ");
+						//}
+					}
 					writer2.printf("\n");
 				}
-				
 				writer2.close();
 				System.out
 						.printf("It took %d cycle to finish \nThe stall happens for %d\n",
@@ -1731,6 +1739,7 @@ public class simulator {
 						pipeline[0].get_left().size(), pipeline[0].get_right()
 								.size()));
 				System.out.printf("the througput is %f", throughput);
+				
 			}
 			writer.close();
 		}

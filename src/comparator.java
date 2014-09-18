@@ -828,7 +828,7 @@ public void clock_move_onefix_parallel(ArrayList line, int buf_size) {
 	}
 	public ArrayList get_buffer_one(int bandwidth) {
 		ArrayList<ArrayList> tmpu = new ArrayList<ArrayList>();
-		for (int i=0; i<bandwidth; i++) {
+		for (int i=0; i<Math.min(bandwidth, this.buffer.size()); i++) {
 		ArrayList tmp = new ArrayList();
 		tmp = this.buffer.get(0);
 		this.buffer.remove(0);
