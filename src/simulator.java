@@ -72,8 +72,7 @@ public class simulator {
 			for (int q = tmp.size() - 1; q >= 0; q--) {
 				tmp.get(q).set(
 						tmp.get(q).size() - 1,
-						Integer.toString(Integer.parseInt((String) tmp.get(q)
-								.get(tmp.get(q).size() - 1)) - 1));
+						Integer.toString(Integer.parseInt((String) tmp.get(q).get(tmp.get(q).size() - 1)) - 1));
 			}
 		} else {
 			for (int j = 0; j < conf.size(); j++) {
@@ -81,7 +80,7 @@ public class simulator {
 				tmp0 = tmp.get(conf.size() - j - 1);
 				if (!list.get(0).equalsIgnoreCase("nested block join")) {
 					ArrayList left = new ArrayList();
-					left.add(j);
+					left.add(Integer.parseInt(tmp0.get(1).substring(1, tmp0.get(1).length()-1)));
 					// ArrayList<ArrayList> jn = new ArrayList<ArrayList>();
 					ArrayList jn = new ArrayList();
 					if (!list.get(0).equalsIgnoreCase("sorter")) {
@@ -98,6 +97,7 @@ public class simulator {
 					pipeline[j] = new comparator(Integer.parseInt(tmp0.get(0)),
 							left, tmp0.get(2), tmp0.get(3), tmp0.get(4),
 							tmp0.get(5), jn, Integer.parseInt(tmp0.get(6)));
+					
 				} else {
 					// System.out.println(list.get(0));
 					ArrayList jn = new ArrayList();
@@ -660,12 +660,7 @@ public class simulator {
 			String order = list.get(2);
 			final int column_selector = Integer.parseInt(list.get(1));
 			
-			class CustomComparator0 implements Comparator<ArrayList> {
-			    @Override
-			    public int compare(ArrayList o1, ArrayList o2) {
-			        return (Integer)(o1.get(column_selector))<(Integer)(o2.get(column_selector))?1:0;
-			    }
-			}
+			
 			class CustomComparator1 implements Comparator<ArrayList> {
 			    @Override
 			    public int compare(ArrayList o1, ArrayList o2) {
@@ -677,6 +672,13 @@ public class simulator {
 			Collections.sort(copyinput, new CustomComparator1());
 			}
 			else {
+				class CustomComparator0 implements Comparator<ArrayList> {
+				    @Override
+				    public int compare(ArrayList o1, ArrayList o2) {
+				        return (Integer)(o1.get(column_selector))<(Integer)(o2.get(column_selector))?1:0;
+				    }
+				}
+			
 				Collections.sort(copyinput, new CustomComparator0());
 			}
 			for (int i=0; i<copyinput.size(); i++) {
@@ -690,13 +692,14 @@ public class simulator {
 		}
 		if (list.get(0).equalsIgnoreCase("parallel processing")) {
 			for (int i = 1; i < list.size()-1; i++) {
-					ArrayList<String> tmp = new ArrayList<String>();
-					ArrayList<String> conf_e = new ArrayList<String>();
+					
+					ArrayList<String> tmpparal = new ArrayList<String>();
+					
 					String text = list.get(i);
 					Scanner fi = new Scanner(text);
 					fi.useDelimiter(" ");
 					while (fi.hasNext()) {
-						tmp.add(fi.next());
+						tmpparal.add(fi.next());
 					}
 					/*if (tmp.get(1).equals("<")) {
 						//conf_e.add("smaller");
@@ -712,24 +715,61 @@ public class simulator {
 							.substring(1, list.get(list.size() - 1).length() - 1)
 							.split("-"));
 					for (int j=0; j<input_data.size(); j++){
-						if (tmp.get(1).equals("<")) {
-							if (Integer.parseInt((String) input_data.get(j).get(Integer.parseInt(tmp.get(0)))) < Integer.parseInt(tmp.get(2))) {
-								ArrayList itemunit = new ArrayList();
+						if (tmpparal.get(1).equals("<")) {
+							if ((Integer)(input_data.get(j).get(Integer.parseInt(tmpparal.get(0)))) < Integer.parseInt(tmpparal.get(2))) {
+								String itemunit;
 								itemunit = item3.get(i - 1);
+								java.util.List<String> itemtmp = new ArrayList();
+								itemtmp = Arrays.asList(itemunit.substring(1, itemunit.length() - 1).split(","));
+								correctout.print(i-1);
+								correctout.print(" ");
+							for (int f=0; f<itemtmp.size(); f++) {
+								
+									correctout.print(input_data.get(j).get(Integer.parseInt(itemtmp.get(f))));
+									correctout.print(" ");
+								}
+							correctout.print("\n");
 							}
-						} else if (tmp.get(1).equals("=")) {
-							//conf_e.add("equal_w");
-						} else if (tmp.get(1).equals(">")) {
-							//conf_e.add("larger");
+						} else if (tmpparal.get(1).equals("=")) {
+							
+								if ((Integer)(input_data.get(j).get(Integer.parseInt(tmpparal.get(0)))) == Integer.parseInt(tmpparal.get(2))) {
+									String itemunit;
+									itemunit = item3.get(i - 1);
+									java.util.List<String> itemtmp = new ArrayList();
+									itemtmp = Arrays.asList(itemunit.substring(1, itemunit.length() - 1).split(","));
+									correctout.print(i-1);
+									correctout.print(" ");
+									for (int f=0; f<itemtmp.size(); f++) {
+										correctout.print(input_data.get(j).get(Integer.parseInt(itemtmp.get(f))));
+										correctout.print(" ");
+									}
+								correctout.print("\n");
+								}
+						} else if (tmpparal.get(1).equals(">")) {
+							
+								if ((Integer)(input_data.get(j).get(Integer.parseInt(tmpparal.get(0)))) > Integer.parseInt(tmpparal.get(2))) {
+									String itemunit;
+									itemunit = item3.get(i - 1);
+									java.util.List<String> itemtmp = new ArrayList();
+									itemtmp = Arrays.asList(itemunit.substring(1, itemunit.length() - 1).split(","));
+									correctout.print(i-1);
+									correctout.print(" ");
+									for (int f=0; f<itemtmp.size(); f++) {
+										correctout.print(input_data.get(j).get(Integer.parseInt(itemtmp.get(f))));
+										correctout.print(" ");
+									}
+								correctout.print("\n");
+								}
 						}
 						
 					}
-					conf_e.add(item3.get(i - 1));
-					conflist.add(conf_e);
+					//conf_e.add(item3.get(i - 1));
+					//conflist.add(conf_e);
 				}
-
-			
+			correctout.close();
 		}
+		}
+
 		/*if (list.get(0).equalsIgnoreCase("nested block join")) {
 			int column_selector = Integer.parseInt(list.get(1));
 			if (input_data.size() > pipeline_deepth) {
@@ -848,7 +888,7 @@ public class simulator {
 
 			}
 		}*/
-	}
+	//}
 
 	public static void composeconfigure(simulator sim, int data_size) {
 		if (list.get(0).equalsIgnoreCase("sorter")) {
@@ -1670,7 +1710,7 @@ public class simulator {
 						//	System.out.print("haha");
 						//	System.out.print(out_table.get(i).get(j));
 							//writer2.print(out_table.get(i).get(j));
-						writer2.print(out_table.get(i));
+						writer2.print(out_table.get(i).toString().substring(1,out_table.get(i).toString().length()-1));
 							writer2.print(" ");
 						//}
 					}

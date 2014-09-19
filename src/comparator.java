@@ -22,7 +22,7 @@ public class comparator {
 
 	private ArrayList<ArrayList> buffer = new ArrayList<ArrayList>();
 
-	private ArrayList<ArrayList> join = new ArrayList<ArrayList>();
+	private ArrayList join = new ArrayList();
 
 	private int left_register, right_register, buffer_length, tmp_size;
 	
@@ -355,13 +355,13 @@ public void clock_move_onefix_parallel(ArrayList line, int buf_size) {
 					if (this.join.size()!=0) {
 						ha.add(this.left.get(0));
 						for (int q = 0; q < join.size(); q++) {
-							ha.add(this.sat_out.get(q));
+							ha.add(this.sat_out.get(Integer.parseInt((String) join.get(q))));
 						}
 						//buffer.add(ha);
 					}
 					else {
 					if (this.left.size()>0){
-					ha.add(this.left.get(0));
+						ha.add(this.left.get(0));
 					}
 					ha.add(this.sat_out.get(0));
 					}
