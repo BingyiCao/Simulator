@@ -565,7 +565,9 @@ public void clock_move_onefix_parallel(ArrayList line, int buf_size) {
 						real_input.get(i).add("true");
 					}
 				}
-				real_input.get((Integer) this.buffer.get(0).get(1)).remove(look_table0.get((Integer) this.buffer.get(0).get(1)).size()-1);
+				//real_input.get((Integer) this.buffer.get(0).get(1)).remove(look_table0.get((Integer) this.buffer.get(0).get(1)).size()-1);
+				
+				//real_input.get((Integer) this.buffer.get(0).get(1)).remove(look_table0.get((Integer) this.buffer.get(0).get(1)).size()-1);
 				real_input.get((Integer) this.buffer.get(0).get(1)).add("false");
 			}
 			this.buffer_reverse_change = true;

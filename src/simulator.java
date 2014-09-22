@@ -47,6 +47,7 @@ public class simulator {
 	static ArrayList<ArrayList> input_data = new ArrayList<ArrayList>();
 	// new set of parameters for seperate
 	static ArrayList<ArrayList> real_input = new ArrayList<ArrayList>();
+	static ArrayList<ArrayList> real_input_copy = new ArrayList<ArrayList>();
 	static ArrayList<ArrayList> search_table0 = new ArrayList<ArrayList>();
 	static ArrayList<ArrayList> search_table1 = new ArrayList<ArrayList>();
 	static ArrayList<ArrayList> out_table = new ArrayList<ArrayList>();
@@ -80,7 +81,8 @@ public class simulator {
 				tmp0 = tmp.get(conf.size() - j - 1);
 				if (!list.get(0).equalsIgnoreCase("nested block join")) {
 					ArrayList left = new ArrayList();
-					left.add(Integer.parseInt(tmp0.get(1).substring(1, tmp0.get(1).length()-1)));
+					//left.add(Integer.parseInt(tmp0.get(1).substring(1, tmp0.get(1).length()-1)));
+					left.add(conf.size()-j-1);
 					// ArrayList<ArrayList> jn = new ArrayList<ArrayList>();
 					ArrayList jn = new ArrayList();
 					if (!list.get(0).equalsIgnoreCase("sorter")) {
@@ -196,10 +198,10 @@ public class simulator {
 				ArrayList em = new ArrayList();
 				em.add(c);
 				search_table0.add(em);
-				System.out.println("input is here!");
-				System.out.println(input_data);
-				System.out.println("input0 is here!!");
-				System.out.println(input_data0);
+				//System.out.println("input is here!");
+				//System.out.println(input_data);
+				//System.out.println("input0 is here!!");
+				//System.out.println(input_data0);
 				for (int f = 0; f < sel_arr.size(); f++) {
 					search_table0.get(c).add(
 							input_data
@@ -238,6 +240,14 @@ public class simulator {
 				real_input.get(c).add("true");
 			}
 		}
+		for (int i=0; i<real_input.size(); i++) {
+			ArrayList copytmp = new ArrayList();
+			for (int j=0; j<real_input.get(i).size(); j++) {
+				copytmp.add(real_input.get(i).get(j));
+			}
+			real_input_copy.add(copytmp);
+		}
+		//real_input_copy = real_input;
 	}
 
 	// bingyi Sep 9th
@@ -768,6 +778,79 @@ public class simulator {
 				}
 			correctout.close();
 		}
+		if (list.get(0).equalsIgnoreCase("nested block join")) {
+			int number0;
+			int number1;
+			number0 = Integer.parseInt(list.get(1));
+			number1 = Integer.parseInt(list.get(2));
+			ArrayList sel_arr = new ArrayList();
+			ArrayList sel_arr_1 = new ArrayList();
+			java.util.List<String> item0 = new ArrayList();
+			item0 = Arrays.asList(list.get(list.size() - 1)
+					.substring(1, list.get(list.size() - 1).length() - 1)
+					.split(","));
+			for (int f = 0; f < item0.size(); f++) {
+				java.util.List<String> item1 = new ArrayList();
+				item1 = Arrays.asList(item0.get(f)
+						.substring(0, item0.get(f).length()).split("-"));
+				if (item1.get(0).equals("1") || item1.get(0).equals(" 1")) {
+					sel_arr.add(item1.get(1));
+				} else if (item1.get(0).equals("2")
+						|| item1.get(0).equals(" 2")) {
+					sel_arr_1.add(item1.get(1));
+				}
+			}
+			for (int i=0; i<input_data.size(); i++) {
+				for (int j=0; j<input_data0.size(); j++) {
+					if (list.get(3).equalsIgnoreCase("<")) {
+						if (Integer.parseInt((String) input_data.get(i).get(number0))<Integer.parseInt((String) input_data0.get(j).get(number1))) {
+							for (int f=0; f<sel_arr.size(); f++) {
+								correctout.print(input_data.get((Integer) sel_arr.get(f)));
+								correctout.print(" ");
+							}
+							for (int f=0; f<sel_arr_1.size(); f++) {
+								correctout.print(input_data0.get((Integer) sel_arr_1.get(f)));
+								correctout.print(" ");
+							}
+							correctout.print("\n");
+						}
+					}
+					else if (list.get(3).equalsIgnoreCase("=")) {
+						if (Integer.parseInt((String) input_data.get(i).get(number0))==Integer.parseInt((String) input_data0.get(j).get(number1))) {
+							if (Integer.parseInt((String) input_data.get(i).get(number0))<Integer.parseInt((String) input_data0.get(j).get(number1))) {
+								for (int f=0; f<sel_arr.size(); f++) {
+									correctout.print(input_data.get((Integer) sel_arr.get(f)));
+									correctout.print(" ");
+								}
+								for (int f=0; f<sel_arr_1.size(); f++) {
+									correctout.print(input_data0.get((Integer) sel_arr_1.get(f)));
+									correctout.print(" ");
+								}
+								correctout.print("\n");
+							}
+						}
+						
+					} else if (list.get(3).equalsIgnoreCase(">")) {
+						if ((Integer)(input_data.get(i).get(number0))>(Integer)(input_data0.get(j).get(number1))) {
+							if (Integer.parseInt((String) input_data.get(i).get(number0))<Integer.parseInt((String) input_data0.get(j).get(number1))) {
+								for (int f=0; f<sel_arr.size(); f++) {
+									correctout.print(input_data.get((Integer) sel_arr.get(f)));
+									correctout.print(" ");
+								}
+								for (int f=0; f<sel_arr_1.size(); f++) {
+									correctout.print(input_data0.get((Integer) sel_arr_1.get(f)));
+									correctout.print(" ");
+								}
+								correctout.print("\n");
+							}
+						}
+						
+					}
+				}
+			}
+			
+			correctout.close();
+		}
 		}
 
 		/*if (list.get(0).equalsIgnoreCase("nested block join")) {
@@ -948,7 +1031,7 @@ public class simulator {
 					}
 					conf_e.add(tmp.get(2));
 					ArrayList tmpf = new ArrayList();
-					tmpf.add(i);
+					tmpf.add(i-1);
 					// conf_e.add(Integer.toString(i));
 					conf_e.add(tmpf.toString());
 					conf_e.add("one_fix");
@@ -1502,8 +1585,8 @@ public class simulator {
 					}
 					if (!sim.pipeline[0].buffer_empty()) {
 						if (list.get(0).equalsIgnoreCase("nested block join")) {
-							System.out.println(real_input);
-							sim.pipeline[0].lookaside_both(real_input,
+							//System.out.println(real_input_copy);
+							sim.pipeline[0].lookaside_both(real_input_copy,
 									search_table0, search_table1, out_table);
 							finish = false;
 						} else {
@@ -1705,13 +1788,25 @@ public class simulator {
 						writer2.print(" ");
 					}
 					}
+					else if (list.get(0).equalsIgnoreCase("nested block join")) {
+						for (int j=0; j<out_table.get(i).size(); j++) {
+							writer2.print(out_table.get(i).get(j));
+							writer2.print(" ");
+						}
+						//writer2.print(out_table.get(i));
+						//writer2.print(" ");
+					}
 					else {
 					//	for (int j=0; j<out_table.get(i).size(); j++) {
 						//	System.out.print("haha");
 						//	System.out.print(out_table.get(i).get(j));
 							//writer2.print(out_table.get(i).get(j));
-						writer2.print(out_table.get(i).toString().substring(1,out_table.get(i).toString().length()-1));
+						for (int j=0; j<out_table.get(i).size(); j++) {
+							writer2.print(out_table.get(i).get(j));
 							writer2.print(" ");
+						}
+						//writer2.print(out_table.get(i).toString().substring(1,out_table.get(i).toString().length()-1));
+							//writer2.print(" ");
 						//}
 					}
 					writer2.printf("\n");
