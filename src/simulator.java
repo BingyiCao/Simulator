@@ -803,52 +803,146 @@ public class simulator {
 			for (int i=0; i<input_data.size(); i++) {
 				for (int j=0; j<input_data0.size(); j++) {
 					if (list.get(3).equalsIgnoreCase("<")) {
-						if (Integer.parseInt((String) input_data.get(i).get(number0))<Integer.parseInt((String) input_data0.get(j).get(number1))) {
-							for (int f=0; f<sel_arr.size(); f++) {
-								correctout.print(input_data.get((Integer) sel_arr.get(f)));
-								correctout.print(" ");
-							}
-							for (int f=0; f<sel_arr_1.size(); f++) {
-								correctout.print(input_data0.get((Integer) sel_arr_1.get(f)));
-								correctout.print(" ");
-							}
-							correctout.print("\n");
-						}
+						
 					}
 					else if (list.get(3).equalsIgnoreCase("=")) {
-						if (Integer.parseInt((String) input_data.get(i).get(number0))==Integer.parseInt((String) input_data0.get(j).get(number1))) {
-							if (Integer.parseInt((String) input_data.get(i).get(number0))<Integer.parseInt((String) input_data0.get(j).get(number1))) {
-								for (int f=0; f<sel_arr.size(); f++) {
-									correctout.print(input_data.get((Integer) sel_arr.get(f)));
-									correctout.print(" ");
-								}
-								for (int f=0; f<sel_arr_1.size(); f++) {
-									correctout.print(input_data0.get((Integer) sel_arr_1.get(f)));
-									correctout.print(" ");
-								}
-								correctout.print("\n");
-							}
-						}
+						
 						
 					} else if (list.get(3).equalsIgnoreCase(">")) {
 						if ((Integer)(input_data.get(i).get(number0))>(Integer)(input_data0.get(j).get(number1))) {
-							if (Integer.parseInt((String) input_data.get(i).get(number0))<Integer.parseInt((String) input_data0.get(j).get(number1))) {
+							
 								for (int f=0; f<sel_arr.size(); f++) {
-									correctout.print(input_data.get((Integer) sel_arr.get(f)));
+									correctout.print(input_data.get(i).get(Integer.parseInt((String) sel_arr.get(f))));
 									correctout.print(" ");
 								}
 								for (int f=0; f<sel_arr_1.size(); f++) {
-									correctout.print(input_data0.get((Integer) sel_arr_1.get(f)));
+									correctout.print(input_data0.get(j).get(Integer.parseInt((String) sel_arr_1.get(f))));
 									correctout.print(" ");
 								}
 								correctout.print("\n");
-							}
+							
 						}
 						
 					}
 				}
 			}
 			
+			correctout.close();
+		}
+		if (list.get(0).equalsIgnoreCase("join or")) {
+			java.util.List<String> item0 = new ArrayList();
+			item0 = Arrays.asList(list.get(list.size() - 1)
+					.substring(1, list.get(list.size() - 1).length() - 1)
+					.split(","));
+			ArrayList<ArrayList> condition = new ArrayList<ArrayList>();
+			for (int i = 1; i < list.size() - 1; i++) {
+				ArrayList<String> tmp = new ArrayList<String>();
+				String text = list.get(i);
+				Scanner fi = new Scanner(text);
+				fi.useDelimiter(" ");
+				while (fi.hasNext()) {
+					tmp.add(fi.next());
+				}
+				condition.add(tmp);
+			}
+			System.out.printf("\n");
+			System.out.println(condition);
+			for (int j=0; j<input_data.size(); j++) {
+				boolean sat = false;
+				int satid = -1;
+			for (int i=0; i<condition.size(); i++) {
+				if (condition.get(i).get(1).equals("<")) {
+					if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).get(0)))))<Integer.parseInt((String) condition.get(i).get(2))) {
+							sat = true;
+
+					}
+					else {
+						
+					}
+				}
+				else if (condition.get(i).get(1).equals(">")) {
+if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).get(0)))))>Integer.parseInt((String) condition.get(i).get(2))) {
+						sat = true;
+					}
+					else {
+						
+					}
+				}
+				else if (condition.get(i).get(1).equals("=")) {
+					if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).get(0)))))==Integer.parseInt((String) condition.get(i).get(2))) {
+									sat = true;
+					}
+					else {
+					
+					}
+				}
+				
+			}
+			if (sat) {
+				for (int f=0; f<item0.size(); f++) {
+					correctout.print(input_data.get(j).get(Integer.parseInt(item0.get(f))));
+					correctout.print(" ");
+				}
+				correctout.print("\n");
+			}
+			}
+			correctout.close();
+		}
+		if (list.get(0).equalsIgnoreCase("join and")) {
+			java.util.List<String> item0 = new ArrayList();
+			item0 = Arrays.asList(list.get(list.size() - 1)
+					.substring(1, list.get(list.size() - 1).length() - 1)
+					.split(","));
+			ArrayList<ArrayList> condition = new ArrayList<ArrayList>();
+			for (int i = 1; i < list.size() - 1; i++) {
+				ArrayList<String> tmp = new ArrayList<String>();
+				String text = list.get(i);
+				Scanner fi = new Scanner(text);
+				fi.useDelimiter(" ");
+				while (fi.hasNext()) {
+					tmp.add(fi.next());
+				}
+				condition.add(tmp);
+			}
+			System.out.printf("\n");
+			System.out.println(condition);
+			for (int j=0; j<input_data.size(); j++) {
+				boolean sat = true;
+			for (int i=0; i<condition.size(); i++) {
+				if (condition.get(i).get(1).equals("<")) {
+					if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).get(0)))))<Integer.parseInt((String) condition.get(i).get(2))) {
+							
+					}
+					else {
+						sat = false;
+					}
+				}
+				else if (condition.get(i).get(1).equals(">")) {
+if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).get(0)))))>Integer.parseInt((String) condition.get(i).get(2))) {
+						
+					}
+					else {
+						sat = false;
+					}
+				}
+				else if (condition.get(i).get(1).equals("=")) {
+					if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).get(0)))))==Integer.parseInt((String) condition.get(i).get(2))) {
+									
+					}
+					else {
+						sat = false;
+					}
+				}
+				
+			}
+			if (sat) {
+				for (int f=0; f<item0.size(); f++) {
+					correctout.print(input_data.get(j).get(Integer.parseInt(item0.get(f))));
+					correctout.print(" ");
+				}
+				correctout.print("\n");
+			}
+			}
 			correctout.close();
 		}
 		}
@@ -1062,6 +1156,7 @@ public class simulator {
 					// System.out.println(item3.get(i - 1));
 					conf_e.add(item3.get(i - 1));
 					conflist.add(conf_e);
+					System.out.print(conf_e);
 				}
 
 			}
@@ -1072,7 +1167,7 @@ public class simulator {
 				System.out
 						.println("sorry, we cannot process the nested block join when both table size exceed the pipeline deepth");
 			} else {
-				data_size = input_data0.size();
+				data_size = input_data.size();
 				// System.out.println("The data to set up configuration is ");
 				// System.out.println(input_data);
 				for (int i = 0; i < input_data.size(); i++) {
@@ -1087,9 +1182,11 @@ public class simulator {
 					// conf_e.add(text.toString());
 					conf_e.add("one_fix");
 					if (list.get(3).equalsIgnoreCase("<")) {
-						conf_e.add("smaller");
-					} else if (list.get(3).equalsIgnoreCase(">")) {
+						//conf_e.add("smaller");
 						conf_e.add("larger");
+					} else if (list.get(3).equalsIgnoreCase(">")) {
+						//conf_e.add("larger");
+						conf_e.add("smaller");
 					} else if (list.get(3).equalsIgnoreCase("=")) {
 						conf_e.add("equal_w");
 					}
@@ -1141,8 +1238,16 @@ public class simulator {
 						conf_e.add("enter_buffer");
 					conf_e.add("discard");
 					conf_e.add(tmp.get(0));
+				//	java.util.List<String> item3 = new ArrayList();
+					//item3 = Arrays.asList(list.get(conf_size - 1)
+							//.substring(1, list.get(conf_size - 1).length() - 1)
+						//	.split("-"));
+
+					// System.out.println(item3.get(i - 1));
+					//conf_e.add(item3.get(i - 1));
 					conf_e.add(list.get(list.size() - 1));
 					conflist.add(conf_e);
+					System.out.print(conf_e);
 				}
 
 			}
@@ -1178,8 +1283,15 @@ public class simulator {
 					conf_e.add("enter_buffer");
 					conf_e.add("keepon");
 					conf_e.add(tmp.get(0));
+					//java.util.List<String> item3 = new ArrayList();
+					//item3 = Arrays.asList(list.get(list.size()-1)
+						//	.substring(1, list.get(list.size() - 1).length() - 1)
+							//.split("-"));
+					//conf_e.add(item3.get(i-1));
+					// System.out.println(item3.get(i - 1));
 					conf_e.add(list.get(list.size() - 1));
 					conflist.add(conf_e);
+					System.out.println(conf_e);
 				}
 
 			}
@@ -1789,12 +1901,12 @@ public class simulator {
 					}
 					}
 					else if (list.get(0).equalsIgnoreCase("nested block join")) {
-						for (int j=0; j<out_table.get(i).size(); j++) {
+						/*for (int j=0; j<out_table.get(i).size(); j++) {
 							writer2.print(out_table.get(i).get(j));
 							writer2.print(" ");
-						}
-						//writer2.print(out_table.get(i));
-						//writer2.print(" ");
+						}*/
+						writer2.print(out_table.get(i));
+						writer2.print(" ");
 					}
 					else {
 					//	for (int j=0; j<out_table.get(i).size(); j++) {
