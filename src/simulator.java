@@ -38,6 +38,8 @@ public class simulator {
 	static PrintWriter writer;
 	static int stallcounter;
 	static int column_selector;
+	
+	static int minsize;
 	// static int preprocesscounter;
 	// static int end_area;
 	// static int area_pipleline;
@@ -176,7 +178,7 @@ public class simulator {
 					sel_arr_1.add(item1.get(1));
 				}
 			}
-
+			look_buf_size = (Integer)(look_buf_size/(minsize*sel_arr_1.size()));
 			for (int c = 0; c < input_data0.size(); c++) {
 				String color = "white";
 				ArrayList em = new ArrayList();
@@ -1325,12 +1327,14 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 		inputdata = keyboard.next();
 		System.out.println("Could you please specify the second data file's name?");
 		inputdata0 = keyboard.next();
-		System.out.println("Could you please specify the buffer size for the buffer in each unit?");
+		System.out.println("Could you please specify the buffer size for the buffer in each unit?(unit: Bytes)");
 		buf_size = keyboard.nextInt();
-		System.out.println("Could you please specify the bandwidth between each unit?");
+		System.out.println("Could you please specify the bandwidth between each unit?(unit:Bytes)");
 		bandwidth = keyboard.nextInt();
-		System.out.println("Could you please specify the look aside buffer size on the end of the pipeline?");
+		System.out.println("Could you please specify the look aside buffer size on the end of the pipeline?(unit:Bytes)");
 		look_buf_size = keyboard.nextInt();
+		System.out.println("Could you please specify the data size of each column in your record? (unit: Bytes)");
+		minsize = keyboard.nextInt();
 		
 		// ArrayList<ArrayList> real_input = null;
 		/*if (args.length == 7) {
@@ -1681,6 +1685,8 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 		// bingyi's Sep 6th
 		else {
 			sim.seperate_file();
+			buf_size = buf_size/(real_input.get(0).size()*minsize);
+			bandwidth = bandwidth/(real_input.get(0).size()*minsize);
 			sim.supposedoutput();
 			writer = new PrintWriter("logfile", "UTF-8");
 
