@@ -43,7 +43,8 @@ public class simulator {
 	// static int preprocesscounter;
 	// static int end_area;
 	// static int area_pipleline;
-
+	static int area_unit;
+	static int real_input_column;
 	static StringBuffer buf = new StringBuffer("");
 
 	static ArrayList<ArrayList> input_data = new ArrayList<ArrayList>();
@@ -1310,7 +1311,7 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 			}
 			writer0.printf("\n");
 		}
-		for (int i=0; i<128; i++) {
+		for (int i=0; i<1024; i++) {
 			for (int j=0; j<14; j++) {
 				writer1.printf("%d ", rand.nextInt(1000));
 			}
@@ -1336,6 +1337,7 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 		System.out.println("Could you please specify the data size of each column in your record? (unit: Bytes)");
 		minsize = keyboard.nextInt();
 		
+		area_unit = buf_size;
 		// ArrayList<ArrayList> real_input = null;
 		/*if (args.length == 7) {
 			gui = Boolean.parseBoolean(args[0]);
@@ -1685,8 +1687,13 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 		// bingyi's Sep 6th
 		else {
 			sim.seperate_file();
-			buf_size = buf_size/(real_input.get(0).size()*minsize);
+			area_unit = area_unit+real_input.get(0).size()*4;
+			buf_size = (Integer)(buf_size/(real_input.get(0).size()*minsize));
 			bandwidth = bandwidth/(real_input.get(0).size()*minsize);
+			System.out.printf("Each record of the input data is %d Bytes\n", (real_input.get(0).size()-1)*minsize);
+			System.out.printf("The buffer in each unit can only hold %d input data row\n", buf_size);
+			System.out.printf("The push reverse can only push %d input row each time\n", bandwidth);
+			
 			sim.supposedoutput();
 			writer = new PrintWriter("logfile", "UTF-8");
 
@@ -1694,7 +1701,7 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 
 			// bingyi need to fix
 			while (!finish) {
-				statetofile();
+				//statetofile();
 				if (clk > conflist.size() + 1 && !finish
 						&& !list.get(0).equalsIgnoreCase("sorter")) {
 					// System.out.println("haha, we are in nested block join, not finish");
@@ -1951,8 +1958,8 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 				} else {
 					System.out.println("we don't need a search table here");
 				}
-				int area_unit = 0;
-				if (pipeline[0].get_left().size() != 0
+				
+				/*if (pipeline[0].get_left().size() != 0
 						&& pipeline[0].get_right().size() != 0) {
 					area_unit = pipeline[0].get_left().size()
 							+ pipeline[0].get_right().size() + 2 + buf_size
@@ -1978,14 +1985,15 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 							+ buf_size * pipeline[0].get_bufferlength() + 2
 							* pipeline[0].get_tmpsize();
 					System.out.println("it should be only sorter");
-				}
-				System.out.printf("the area in each unit is %d\n", area_unit);
+				}*/
+				System.out.printf("the area in each unit is %d\n", area_unit*minsize);
 				System.out.printf("the total area in the pipeline is %d\n",
-						area_unit * conflist.size());
-				double throughput = (double) (input_data.size() * Math.max(
+						area_unit * conflist.size()*minsize);
+			/*	double throughput = (double) (input_data.size() * Math.max(
 						pipeline[0].get_left().size(), pipeline[0].get_right()
 								.size()))
-						/ clk;
+						/ clk;*/
+				double throughput = (double) ((input_data.size()*real_input_copy.get(0).size()+conflist.size()*conflist.get(0).size())*minsize/clk);
 				System.out.printf("the input data length is %d\n",
 						input_data.size());
 				System.out.printf("the record input size is %d\n", Math.max(
