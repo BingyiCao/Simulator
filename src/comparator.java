@@ -542,19 +542,31 @@ public void clock_move_onefix_parallel(ArrayList line, int buf_size) {
 				//real_input.get((Integer) this.buffer.get(0).get(1)).add("done");
 			}
 			else {
-			tmp = look_table.get((Integer.parseInt( (String) this.buffer.get(0).get(0)))).toString().substring(3);
-			tmp = tmp.substring(0, tmp.length()-1);
-			tmp = tmp+ look_table0.get((Integer) this.buffer.get(0).get(1)).toString().substring(2);
-			
-			java.util.List<String> item2 = new ArrayList();
-			item2 = Arrays.asList(tmp
-					.substring(1, tmp.length() - 1)
-					.split(","));
-			ArrayList array_tmp0 = new ArrayList();
-			for (int f = 0; f < item2.size()-1; f++) {
-				array_tmp0.add(item2.get(f));
+			//	System.out.println(look_table.get((Integer.parseInt( (String) this.buffer.get(0).get(0)))).toString());
+				//System.out.println(look_table.get((Integer.parseInt( (String) this.buffer.get(0).get(0)))).toString().substring(3));
+				//StringBuilder stringBuilder = new StringBuilder();
+				ArrayList tmpout = new ArrayList();
+				for (int i=1; i<look_table.get((Integer.parseInt( (String) this.buffer.get(0).get(0)))).size(); i++) {
+					tmpout.add(look_table.get((Integer.parseInt( (String) this.buffer.get(0).get(0)))).get(i));
+				}
+			//tmp = look_table.get((Integer.parseInt( (String) this.buffer.get(0).get(0)))).toString().substring(3);
+			//tmp = tmp.substring(0, tmp.length()-1);
+			//tmp = tmp+ look_table0.get((Integer) this.buffer.get(0).get(1)).toString().substring(2);
+			for (int i=1; i<look_table0.get((Integer) this.buffer.get(0).get(1)).size()-1; i++) {
+				tmpout.add(look_table0.get((Integer) this.buffer.get(0).get(1)).get(i));
+				
 			}
-			out_table.add(array_tmp0);
+		//	java.util.List<String> item2 = new ArrayList();
+			//item2 = Arrays.asList(tmp
+				//	.substring(1, tmp.length() - 1)
+					//.split(","));
+			//ArrayList array_tmp0 = new ArrayList();
+			//for (int f = 0; f < item2.size()-1; f++) {
+				//array_tmp0.add(item2.get(f));
+			//}
+			
+			//out_table.add(array_tmp0);
+			out_table.add(tmpout);
 			}
 			if (this.buffer.get(0).get(this.buffer.get(0).size()-1).equals("end")){
 				look_table0.get((Integer) this.buffer.get(0).get(1)).remove(look_table0.get((Integer) this.buffer.get(0).get(1)).size()-1);

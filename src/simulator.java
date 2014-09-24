@@ -1305,13 +1305,13 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 		PrintWriter writer0 = new PrintWriter("data0", "UTF-8");
 		PrintWriter writer1 = new PrintWriter("data", "UTF-8");
 		Random rand = new Random();
-		for (int i=0; i<128; i++) {
+		for (int i=0; i<12; i++) {
 			for (int j=0; j<15; j++) {
 				writer0.printf("%d ", rand.nextInt(1000));
 			}
 			writer0.printf("\n");
 		}
-		for (int i=0; i<1024; i++) {
+		for (int i=0; i<12; i++) {
 			for (int j=0; j<14; j++) {
 				writer1.printf("%d ", rand.nextInt(1000));
 			}
@@ -1711,7 +1711,7 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 					if (!sim.pipeline[0].buffer_empty()) {
 						if (list.get(0).equalsIgnoreCase("nested block join")) {
 							//System.out.println(real_input_copy);
-							sim.pipeline[0].lookaside_both(real_input_copy,
+							sim.pipeline[0].lookaside_both(real_input,
 									search_table0, search_table1, out_table);
 							finish = false;
 						} else {
@@ -1893,6 +1893,7 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 				}
 				// else if (done && !finish &&
 				// list.get(0).equalsIgnoreCase("nested block join")) {
+				
 
 				clk++;
 				// System.out.printf("clk is %d\n", clk);
@@ -1993,13 +1994,14 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 						pipeline[0].get_left().size(), pipeline[0].get_right()
 								.size()))
 						/ clk;*/
-				double throughput = (double) ((input_data.size()*real_input_copy.get(0).size()+conflist.size()*conflist.get(0).size())*minsize/clk);
+				double throughput = (double) ((double)(input_data.size()*real_input_copy.get(0).size()+conflist.size()*conflist.get(0).size())*minsize/(double)(clk));
 				System.out.printf("the input data length is %d\n",
 						input_data.size());
 				System.out.printf("the record input size is %d\n", Math.max(
 						pipeline[0].get_left().size(), pipeline[0].get_right()
 								.size()));
-				System.out.printf("the througput is %f", throughput);
+				System.out.printf("the total number of Bytes been feed to the pipeline is %d\n", (input_data.size()*real_input_copy.get(0).size()+conflist.size()*conflist.get(0).size()));
+				System.out.printf("the throughput is %f", throughput);
 				
 			}
 			writer.close();
