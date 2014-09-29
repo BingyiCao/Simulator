@@ -333,35 +333,19 @@ public void clock_move_onefix_parallel(ArrayList line, int buf_size) {
 					if (!buffer.contains(this.sat_out))
 						this.buffer_change = true;
 					ArrayList ha = new ArrayList();
-					/*if (this.join.size() == 1) {
-					ArrayList ha = new ArrayList();
-					for (int q = 0; q < join.get(0).size(); q++) {
-						ha.add(this.sat_out.get((Integer
-								.parseInt((String) join.get(0).get(q)))));
-					}
-					buffer.add(ha);
-				} else if (this.join.size() == 2) {
-					ArrayList ha = new ArrayList();
-					for (int q = 0; q < join.get(0).size(); q++) {
-						ha.add(this.left.get((Integer
-								.parseInt((String) join.get(0).get(q)))));
-					}
-					for (int q = 0; q < join.get(1).size(); q++) {
-						ha.add(this.sat_out.get((Integer
-								.parseInt((String) join.get(1).get(q)))));
-					}
-					buffer.add(ha);
-				}*/
+					//System.out.println(this.join.size());
 					if (this.join.size()!=0) {
 						ha.add(this.left.get(0));
 						for (int q = 0; q < join.size(); q++) {
 							ha.add(this.sat_out.get(Integer.parseInt((String) join.get(q))));
 						}
 						//buffer.add(ha);
+						//System.out.println("we are here!!!");
 					}
 					else {
 					if (this.left.size()>0){
 						ha.add(this.left.get(0));
+						
 					}
 					ha.add(this.sat_out.get(0));
 					}
@@ -374,6 +358,10 @@ public void clock_move_onefix_parallel(ArrayList line, int buf_size) {
 					if (ha.size()>buffer_length) {
 						buffer_length=ha.size();
 					}
+					//if (ha.size()<2) {
+					//System.out.println(ha);
+					//System.out.println("the ha is not right here");
+				//	}
 					buffer.add(ha);
 				}
 				
@@ -401,6 +389,7 @@ public void clock_move_onefix_parallel(ArrayList line, int buf_size) {
 			ha.add(this.left.get(0));
 			ha.add(this.unsat_out.get(0));
 			ha.add("no_end");
+			//System.out.println(ha);
 			buffer.add(ha);
 				}
 		}
@@ -514,7 +503,6 @@ public void clock_move_onefix_parallel(ArrayList line, int buf_size) {
 			this.buffer.remove(0);
 		}
 	}
-	
 	public void lookaside_both(ArrayList<ArrayList> real_input, ArrayList<ArrayList> look_table, ArrayList<ArrayList> look_table0, ArrayList<ArrayList> out_table) {
 		if (!this.buffer_empty()) {
 			String tmp;
@@ -587,7 +575,6 @@ public void clock_move_onefix_parallel(ArrayList line, int buf_size) {
 		}
 	}
 	
-	
 	public void set_buf_em(int band_width) {
 		//this.buffer.clear();
 		//this.buffer.remove(0);
@@ -605,13 +592,27 @@ public void clock_move_onefix_parallel(ArrayList line, int buf_size) {
 		return this.buffer_reverse_change;
 	}
 	public void check_stall(int buf_size) {
-		if (this.stall== true && this.buffer.size()<buf_size) {
+		if (this.stall== true && this.buffer.size()<buf_size && this.sat_f == true) {
 			this.stall = false;
 			this.stall_change = true;
 			this.buffer_change = true;
 			ArrayList ha = new ArrayList();
-			ha.add(this.left.get(0));
-			ha.add(this.tmp0.get(0));
+			//ha.add(this.left.get(0));
+			//ha.add(this.tmp0.get(0));
+			
+			if (this.join.size()!=0) {
+				ha.add(this.left.get(0));
+				for (int q = 0; q < join.size(); q++) {
+					ha.add(this.sat_out.get(Integer.parseInt((String) join.get(q))));
+				}
+				//buffer.add(ha);
+				//System.out.println("we are here!!!");
+			}
+			//bingyi's new else
+			else {
+				ha.add(this.left.get(0));
+				ha.add(this.tmp0.get(0));
+			}
 			if (this.sa_mod.equals(sa_mod.keepon_enter)) {
 				buffer.add(ha);
 			}	

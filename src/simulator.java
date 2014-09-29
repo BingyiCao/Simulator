@@ -99,6 +99,9 @@ public class simulator {
 							jn.add(item2.get(f));
 						}
 					}
+					//bingyi sep 28th
+					left.add(tmp0.get(1));
+					System.out.println(jn);
 					pipeline[j] = new comparator(Integer.parseInt(tmp0.get(0)),
 							left, tmp0.get(2), tmp0.get(3), tmp0.get(4),
 							tmp0.get(5), jn, Integer.parseInt(tmp0.get(6)));
@@ -1160,6 +1163,7 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 					conf_e.add(item3.get(i - 1));
 					conflist.add(conf_e);
 					System.out.print(conf_e);
+					System.out.println();
 				}
 
 			}
