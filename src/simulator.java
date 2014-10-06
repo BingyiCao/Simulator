@@ -806,6 +806,7 @@ public class simulator {
 					sel_arr_1.add(item1.get(1));
 				}
 			}
+			//need to fix
 			for (int i=0; i<input_data.size(); i++) {
 				for (int j=0; j<input_data0.size(); j++) {
 					if (list.get(3).equalsIgnoreCase("<")) {
@@ -1309,13 +1310,13 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 		PrintWriter writer0 = new PrintWriter("data0", "UTF-8");
 		PrintWriter writer1 = new PrintWriter("data", "UTF-8");
 		Random rand = new Random();
-		for (int i=0; i<12; i++) {
-			for (int j=0; j<15; j++) {
+		for (int i=0; i<128; i++) {
+			for (int j=0; j<14; j++) {
 				writer0.printf("%d ", rand.nextInt(1000));
 			}
 			writer0.printf("\n");
 		}
-		for (int i=0; i<12; i++) {
+		for (int i=0; i<128; i++) {
 			for (int j=0; j<14; j++) {
 				writer1.printf("%d ", rand.nextInt(1000));
 			}
@@ -1800,6 +1801,7 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 					if (!stop) {
 						// System.out.println("gosh, the input size is ");
 						// System.out.println(real_input);
+						//bingyi Friday fix
 						if (real_input.size() != 0) {
 							// System.out.println("haha, we are in bingyi's new code");
 							// sim.pipeline[0].clock_move(input_data.get(0));
@@ -1812,6 +1814,7 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 								// ArrayList ex_input = new ArrayList();
 								real_input.get(0).remove(
 										real_input.get(0).size() - 1);
+								System.out.println(real_input.get(0));
 								if (list.get(0).equalsIgnoreCase("join or")
 										|| list.get(0).equalsIgnoreCase(
 												"join and")

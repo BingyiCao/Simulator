@@ -100,8 +100,7 @@ public class comparator {
 		} else if (this.register_mod.equals(register_mod.one_fix)) {
 			clock_move_onefix(line, buf_size);
 		}
-		
-		
+		//System.out.println(this.buffer);
 	}
 public void clock_move_parallel(ArrayList line, int buf_size) {
 		
@@ -136,6 +135,7 @@ public void clock_move_parallel(ArrayList line, int buf_size) {
 		} else if (this.register_mod.equals(register_mod.one_fix)) {
 			clock_last_onefix(buf_size);
 		}
+		System.out.println(this.buffer);
 	}
 
 	public void output_disable() {
@@ -584,7 +584,9 @@ public void clock_move_onefix_parallel(ArrayList line, int buf_size) {
 		else {
 			for (int i=0; i<band_width; i++) {
 				this.buffer.remove(0);
+				
 			}
+			
 		}
 	}
 	
@@ -627,7 +629,7 @@ public void clock_move_onefix_parallel(ArrayList line, int buf_size) {
 		if (buf.size() !=0){
 		//this.buffer.clear();
 		if (buf.size()<band_width) {
-			if (buf.size()+1+this.buffer.size()< buf_size) {
+			if (buf.size()+1+this.buffer.size()<= buf_size) {
 			counter = buf.size();
 			for (int i=0; i<buf.size(); i++) {
 				this.buffer.add(buf.get(i));
@@ -635,9 +637,10 @@ public void clock_move_onefix_parallel(ArrayList line, int buf_size) {
 			}
 			}
 			else {
+				//System.out.println("in the else part haha");
 				if (buf_size-1-this.buffer.size() > 0) {
 					counter = buf_size-1-this.buffer.size();
-				for (int i=0; i<buf_size-1-this.buffer.size(); i++) {
+				for (int i=0; i<counter; i++) {
 					this.buffer.add(buf.get(i));
 					this.buffer_reverse_change = true;
 				}
@@ -645,7 +648,7 @@ public void clock_move_onefix_parallel(ArrayList line, int buf_size) {
 			}
 		}
 		else {
-			if (band_width+1+this.buffer.size()<buf_size) {
+			if (band_width+1+this.buffer.size()<=buf_size) {
 				counter = band_width;
 			for (int i=0; i<band_width; i++){
 			this.buffer.add(buf.get(i));
@@ -654,9 +657,10 @@ public void clock_move_onefix_parallel(ArrayList line, int buf_size) {
 			}
 			}
 			else {
+				//System.out.println("in second the else part haha");
 				if (buf_size-1-this.buffer.size()>0) {
 					counter = buf_size-1-this.buffer.size();
-					for (int i=0; i<buf_size-1-this.buffer.size(); i++) {
+					for (int i=0; i<counter; i++) {
 						this.buffer.add(buf.get(i));
 						this.buffer_reverse_change = true;
 					}
