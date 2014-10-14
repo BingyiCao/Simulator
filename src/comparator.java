@@ -135,7 +135,7 @@ public void clock_move_parallel(ArrayList line, int buf_size) {
 		} else if (this.register_mod.equals(register_mod.one_fix)) {
 			clock_last_onefix(buf_size);
 		}
-		System.out.println(this.buffer);
+		//System.out.println(this.buffer);
 	}
 
 	public void output_disable() {

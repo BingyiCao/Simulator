@@ -196,18 +196,13 @@ public class simulator {
 					real_input.get(c).add("false");
 				}
 			}
-			System.out.println("real input data is as following");
-			System.out.println(real_input);
+			
 
 			for (int c = 0; c < input_data.size(); c++) {
 				String color = "white";
 				ArrayList em = new ArrayList();
 				em.add(c);
 				search_table0.add(em);
-				//System.out.println("input is here!");
-				//System.out.println(input_data);
-				//System.out.println("input0 is here!!");
-				//System.out.println(input_data0);
 				for (int f = 0; f < sel_arr.size(); f++) {
 					search_table0.get(c).add(
 							input_data
@@ -352,15 +347,11 @@ public class simulator {
 					sel_arr_1.add(item1.get(1));
 				}
 			}
-			// System.out.println("haha, let us see the sel_arr");
-			// System.out.println(sel_arr);
-			// System.out.println("let us see the sel_arr_1");
-			// System.out.println(sel_arr_1);
+			
 			buf.append("<div>");
 			buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
 					+ "Real Input Data" + "</div>\n");
-			// System.out.println("let us see input_data0.size");
-			// System.out.println(input_data0);
+			
 			for (int c = 0; c < input_data0.size(); c++) {
 				String color = "white";
 				ArrayList em = new ArrayList();
@@ -386,8 +377,7 @@ public class simulator {
 				}
 				buf.append("    <div style=\"clear:both;\"></div>\n");
 			}
-			System.out.println("real input data is as following");
-			System.out.println(real_input);
+			
 			buf.append("<div>");
 			buf.append("<div style=\"width: 800px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
 					+ "Search Table 0" + "</div>\n");
@@ -954,125 +944,7 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 		}
 		}
 
-		/*if (list.get(0).equalsIgnoreCase("nested block join")) {
-			int column_selector = Integer.parseInt(list.get(1));
-			if (input_data.size() > pipeline_deepth) {
-				System.out
-						.println("sorry, we cannot process the nested block join when both table size exceed the pipeline deepth");
-			} else {
-				data_size = input_data0.size();
-				// System.out.println("The data to set up configuration is ");
-				// System.out.println(input_data);
-				for (int i = 0; i < input_data.size(); i++) {
-					// real_input = input_data0;
-					ArrayList tmp = new ArrayList<String>();
-					ArrayList<String> conf_e = new ArrayList<String>();
-					ArrayList text = input_data.get(i);
-					conf_e.add(Integer.toString((Integer) text
-							.get(column_selector)));
-					// tmp=search_table0.get(0);
-					conf_e.add(Integer.toString(i));
-					// conf_e.add(text.toString());
-					conf_e.add("one_fix");
-					if (list.get(3).equalsIgnoreCase("<")) {
-						conf_e.add("smaller");
-					} else if (list.get(3).equalsIgnoreCase(">")) {
-						conf_e.add("larger");
-					} else if (list.get(3).equalsIgnoreCase("=")) {
-						conf_e.add("equal_w");
-					}
-					if (i > 0) {
-						conf_e.add("keepon_enter");
-						conf_e.add("keepon");
-					} else {
-						conf_e.add("keepon_enter_last");
-						conf_e.add("keepon_last");
-					}
-					conf_e.add(Integer.toString(column_selector));
-					// conf_e.add(list.get(list.size() - 1));
-					conflist.add(conf_e);
-					// System.out.println(conf_e);
-				}
-			}
-		}
-		if (list.get(0).equalsIgnoreCase("join and")) {
-			int conf_size;
-			data_size = input_data.size();
-			conf_size = list.size();
-			if (conf_size > sim.pipeline_deepth) {
-				System.out.format(
-						"sorry, we can only process less than %d join and\n",
-						sim.pipeline_deepth);
-			} else {
-				for (int i = 1; i < conf_size - 1; i++) {
-					ArrayList<String> tmp = new ArrayList<String>();
-					ArrayList<String> conf_e = new ArrayList<String>();
-					String text = list.get(i);
-					Scanner fi = new Scanner(text);
-					fi.useDelimiter(" ");
-					while (fi.hasNext()) {
-						tmp.add(fi.next());
-					}
-					conf_e.add(tmp.get(2));
-					conf_e.add(Integer.toString(0));
-					conf_e.add("one_fix");
-					if (tmp.get(1).equals("<")) {
-						conf_e.add("smaller");
-					} else if (tmp.get(1).equals("=")) {
-						conf_e.add("equal_w");
-					} else if (tmp.get(1).equals(">")) {
-						conf_e.add("larger");
-					}
-					if (i != 1)
-						conf_e.add("keepon");
-					else
-						conf_e.add("enter_buffer");
-					conf_e.add("discard");
-					conf_e.add(tmp.get(0));
-					conf_e.add(list.get(list.size() - 1));
-					conflist.add(conf_e);
-				}
-
-			}
-		}
-		if (list.get(0).equalsIgnoreCase("join or")) {
-			int conf_size;
-			data_size = input_data.size();
-			conf_size = list.size();
-			if (conf_size > sim.pipeline_deepth) {
-				System.out.format(
-						"sorry, we can only process less than %d join and\n",
-						sim.pipeline_deepth);
-			} else {
-				for (int i = 1; i < conf_size - 1; i++) {
-					ArrayList<String> tmp = new ArrayList<String>();
-					ArrayList<String> conf_e = new ArrayList<String>();
-					String text = list.get(i);
-					Scanner fi = new Scanner(text);
-					fi.useDelimiter(" ");
-					while (fi.hasNext()) {
-						tmp.add(fi.next());
-					}
-					conf_e.add(tmp.get(2));
-					conf_e.add(Integer.toString(0));
-					conf_e.add("one_fix");
-					if (tmp.get(1).equals("<")) {
-						conf_e.add("smaller");
-					} else if (tmp.get(1).equals("=")) {
-						conf_e.add("equal_w");
-					} else if (tmp.get(1).equals(">")) {
-						conf_e.add("larger");
-					}
-					conf_e.add("enter_buffer");
-					conf_e.add("keepon");
-					conf_e.add(tmp.get(0));
-					conf_e.add(list.get(list.size() - 1));
-					conflist.add(conf_e);
-				}
-
-			}
-		}*/
-	//}
+		
 
 	public static void composeconfigure(simulator sim, int data_size) {
 		if (list.get(0).equalsIgnoreCase("sorter")) {
@@ -1154,13 +1026,13 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 					// conf_e.add("keepon_enter");
 					// conf_e.add("keepon");
 					conf_e.add(tmp.get(0));
-					// System.out.println(list.get(conf_size-1));
+					
 					java.util.List<String> item3 = new ArrayList();
 					item3 = Arrays.asList(list.get(conf_size - 1)
 							.substring(1, list.get(conf_size - 1).length() - 1)
 							.split("-"));
 
-					// System.out.println(item3.get(i - 1));
+				
 					conf_e.add(item3.get(i - 1));
 					conflist.add(conf_e);
 					System.out.print(conf_e);
@@ -1176,8 +1048,6 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 						.println("sorry, we cannot process the nested block join when both table size exceed the pipeline deepth");
 			} else {
 				data_size = input_data.size();
-				// System.out.println("The data to set up configuration is ");
-				// System.out.println(input_data);
 				for (int i = 0; i < input_data.size(); i++) {
 					// real_input = input_data0;
 					ArrayList tmp = new ArrayList<String>();
@@ -1208,7 +1078,7 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 					conf_e.add(Integer.toString(column_selector));
 					// conf_e.add(list.get(list.size() - 1));
 					conflist.add(conf_e);
-					// System.out.println(conf_e);
+
 				}
 			}
 		}
@@ -1246,13 +1116,6 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 						conf_e.add("enter_buffer");
 					conf_e.add("discard");
 					conf_e.add(tmp.get(0));
-				//	java.util.List<String> item3 = new ArrayList();
-					//item3 = Arrays.asList(list.get(conf_size - 1)
-							//.substring(1, list.get(conf_size - 1).length() - 1)
-						//	.split("-"));
-
-					// System.out.println(item3.get(i - 1));
-					//conf_e.add(item3.get(i - 1));
 					conf_e.add(list.get(list.size() - 1));
 					conflist.add(conf_e);
 					System.out.print(conf_e);
@@ -1291,12 +1154,6 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 					conf_e.add("enter_buffer");
 					conf_e.add("keepon");
 					conf_e.add(tmp.get(0));
-					//java.util.List<String> item3 = new ArrayList();
-					//item3 = Arrays.asList(list.get(list.size()-1)
-						//	.substring(1, list.get(list.size() - 1).length() - 1)
-							//.split("-"));
-					//conf_e.add(item3.get(i-1));
-					// System.out.println(item3.get(i - 1));
 					conf_e.add(list.get(list.size() - 1));
 					conflist.add(conf_e);
 					System.out.println(conf_e);
@@ -1316,7 +1173,7 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 			}
 			writer0.printf("\n");
 		}
-		for (int i=0; i<128; i++) {
+		for (int i=0; i<32; i++) {
 			for (int j=0; j<14; j++) {
 				writer1.printf("%d ", rand.nextInt(1000));
 			}
@@ -1464,7 +1321,7 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 				while (clk <= set_clk) {
 					if (clk > conflist.size() + 1 && !finish
 							&& !list.get(0).equalsIgnoreCase("sorter")) {
-						// System.out.println("haha, we are in nested block join, not finish");
+				
 						if (done) {
 							finish = true;
 						}
@@ -1491,8 +1348,6 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 								end = j;
 							}
 						}
-						// System.out.println("haha end is here");
-						// System.out.println(end);
 						if (end >= 0) {
 							finish = false;
 							// for (int j=0; j<end; j++) {
@@ -1506,8 +1361,6 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 
 								// }
 							}
-							// System.out.printf("we are checking the %d pipeline",
-							// end);
 							sim.pipeline[conflist.size() - 1]
 									.check_stall(buf_size);
 						}
@@ -1532,7 +1385,7 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 							}
 						} else {
 							if (clk > conflist.size() + real_input.size()) {
-								// System.out.println("trying to setup done");
+								
 								for (int g = 0; g < conflist.size(); g++) {
 									if (!sim.pipeline[g].get_rf()
 											|| sim.pipeline[g].get_tmp0f()
@@ -1554,18 +1407,11 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 							}
 						}
 						if (!stop) {
-							// System.out.println("gosh, the input size is ");
-							// System.out.println(real_input);
+							
 							if (real_input.size() != 0) {
-								// System.out.println("haha, we are in bingyi's new code");
-								// sim.pipeline[0].clock_move(input_data.get(0));
-								// input_data.remove(0);
-
 								if (real_input.get(0)
 										.get(real_input.get(0).size() - 1)
 										.equals("true")) {
-									// System.out.println("in the get input stage");
-									// ArrayList ex_input = new ArrayList();
 									real_input.get(0).remove(
 											real_input.get(0).size() - 1);
 									if (list.get(0).equalsIgnoreCase("join or")
@@ -1579,7 +1425,6 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 										sim.pipeline[0].clock_move(
 												real_input.get(0), buf_size);
 									}
-									// System.out.println(real_input.get(0));
 									real_input.remove(0);
 								} else {
 									sim.pipeline[0].last_clk_move(buf_size);
@@ -1591,8 +1436,6 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 
 							for (int j = 1; j < conflist.size(); j++) {
 								if (pipeline[j - 1].out_f()) {
-									// System.out.printf("the %d has a valid output\n",
-									// j - 1);
 									if (list.get(0).equalsIgnoreCase("join or")
 											|| list.get(0).equalsIgnoreCase(
 													"parallel processing")
@@ -1619,7 +1462,6 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 						alldone = true;
 					} else if (alldone && !finish
 							&& list.get(0).equalsIgnoreCase("sorter")) {
-						// System.out.println("test here or not");
 						finish = true;
 						if (!sim.pipeline[0].buffer_empty()) {
 							sim.pipeline[0].lookaside(search_table0, out_table);
@@ -1631,8 +1473,6 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 								end = j;
 							}
 						}
-						// System.out.println("haha end is here");
-						// System.out.println(end);
 						if (end >= 0) {
 							finish = false;
 							for (int j = 0; j < end; j++) {
@@ -1656,18 +1496,13 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 					if (clk <= set_clk)
 						state();
 				}
-				// sim.write_out(outputfile);
-				// running done..........
-				// System.out.println("we are in the cylce");
+				
 				System.out.println(clk);
 				System.out.println(set_clk);
 				f = false;
 				if (!f)
 					refresh = 0;
 				server.replyState(state(), refresh);
-				// System.out.println("we are in the cylce huhu");
-				// System.out.println(clk);
-				// System.out.println(set_clk);
 
 				while ((req = server.nextRequest(0)) == 'I' || req == 'X')
 					;
@@ -1709,18 +1544,16 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 				//statetofile();
 				if (clk > conflist.size() + 1 && !finish
 						&& !list.get(0).equalsIgnoreCase("sorter")) {
-					// System.out.println("haha, we are in nested block join, not finish");
+				
 					if (done) {
 						finish = true;
 					}
 					if (!sim.pipeline[0].buffer_empty()) {
 						if (list.get(0).equalsIgnoreCase("nested block join")) {
-							//System.out.println(real_input_copy);
 							sim.pipeline[0].lookaside_both(real_input,
 									search_table0, search_table1, out_table);
 							finish = false;
 						} else {
-							//System.out.println("we should get the output");
 							out_table.add(sim.pipeline[0]
 									.get_buffer_one(bandwidth));
 						}
@@ -1735,8 +1568,6 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 							end = j;
 						}
 					}
-					// System.out.println("haha end is here");
-					// System.out.println(end);
 					if (end >= 0) {
 						finish = false;
 						// for (int j=0; j<end; j++) {
@@ -1750,8 +1581,6 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 
 							// }
 						}
-						// System.out.printf("we are checking the %d pipeline",
-						// end);
 						sim.pipeline[conflist.size() - 1].check_stall(buf_size);
 					}
 				}
@@ -1774,7 +1603,6 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 						}
 					} else {
 						if (clk > conflist.size() + real_input.size()) {
-							// System.out.println("trying to setup done");
 							for (int g = 0; g < conflist.size(); g++) {
 								if (!sim.pipeline[g].get_rf()
 										|| sim.pipeline[g].get_tmp0f()
@@ -1799,19 +1627,11 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 						stallcounter++;
 					}
 					if (!stop) {
-						// System.out.println("gosh, the input size is ");
-						// System.out.println(real_input);
 						//bingyi Friday fix
 						if (real_input.size() != 0) {
-							// System.out.println("haha, we are in bingyi's new code");
-							// sim.pipeline[0].clock_move(input_data.get(0));
-							// input_data.remove(0);
-							//System.out.println(clk);
 							if (real_input.get(0)
 									.get(real_input.get(0).size() - 1)
 									.equals("true")) {
-								// System.out.println("in the get input stage");
-								// ArrayList ex_input = new ArrayList();
 								real_input.get(0).remove(
 										real_input.get(0).size() - 1);
 								System.out.println(real_input.get(0));
@@ -1838,8 +1658,7 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 
 						for (int j = 1; j < conflist.size(); j++) {
 							if (pipeline[j - 1].out_f()) {
-								// System.out.printf("the %d has a valid output\n",
-								// j - 1);
+								
 								if (list.get(0).equalsIgnoreCase("join or")
 										|| list.get(0).equalsIgnoreCase(
 												"parallel processing")
@@ -1868,7 +1687,6 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 					
 				} else if (alldone && !finish
 						&& list.get(0).equalsIgnoreCase("sorter")) {
-					// System.out.println("test here or not");
 					finish = true;
 					if (!sim.pipeline[0].buffer_empty()) {
 						sim.pipeline[0].lookaside(search_table0, out_table);
@@ -1880,8 +1698,6 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 							end = j;
 						}
 					}
-					// System.out.println("haha end is here");
-					// System.out.println(end);
 					if (end >= 0) {
 						finish = false;
 						for (int j = 0; j < end; j++) {
@@ -1903,7 +1719,6 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 				
 
 				clk++;
-				// System.out.printf("clk is %d\n", clk);
 			}
 			// bingyi need to fix
 			if (finish) {
@@ -1911,12 +1726,9 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 				writer2.printf(
 						"Finished at cycle %d, and the output is as following\n",
 						clk);
-				//System.out.printf("out_table size is %d\n", out_table.size());
 				for (int i =0; i<out_table.size(); i++) {
 					if (list.get(0).equalsIgnoreCase("sorter")) {
 					for (int j=1; j<out_table.get(i).size(); j++) {
-						//System.out.print("haha");
-						//System.out.print(out_table.get(i).get(j));
 						writer2.print(out_table.get(i).get(j));
 						writer2.print(" ");
 					}
@@ -1930,17 +1742,12 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 						writer2.print(" ");
 					}
 					else {
-					//	for (int j=0; j<out_table.get(i).size(); j++) {
-						//	System.out.print("haha");
-						//	System.out.print(out_table.get(i).get(j));
-							//writer2.print(out_table.get(i).get(j));
+			
 						for (int j=0; j<out_table.get(i).size(); j++) {
 							writer2.print(out_table.get(i).get(j));
 							writer2.print(" ");
 						}
-						//writer2.print(out_table.get(i).toString().substring(1,out_table.get(i).toString().length()-1));
-							//writer2.print(" ");
-						//}
+						
 					}
 					writer2.printf("\n");
 				}
@@ -1967,33 +1774,7 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 					System.out.println("we don't need a search table here");
 				}
 				
-				/*if (pipeline[0].get_left().size() != 0
-						&& pipeline[0].get_right().size() != 0) {
-					area_unit = pipeline[0].get_left().size()
-							+ pipeline[0].get_right().size() + 2 + buf_size
-							* pipeline[0].get_bufferlength() + 2
-							* pipeline[0].get_tmpsize();
-					// System.out.printf("the left size is %d\n",
-					// pipeline[0].get_left().size());
-					// System.out.printf("the right size is %d\n",
-					// pipeline[0].get_right().size());
-					// System.out.printf("the buffer length is %d\n",
-					// pipeline[0].get_bufferlength());
-					// System.out.printf("the tmp and output size is %d\n",
-					// pipeline[0].get_tmpsize());
-					System.out.printf("the area in each unit is %d\n",
-							area_unit);
-				} else if (pipeline[0].get_left().size() != 0) {
-					area_unit = 2 * pipeline[0].get_left().size() + 2
-							+ buf_size * pipeline[0].get_bufferlength() + 2
-							* pipeline[0].get_tmpsize();
-					System.out.println("it should be only sorter");
-				} else if (pipeline[0].get_right().size() != 0) {
-					area_unit = 2 * pipeline[0].get_right().size() + 2
-							+ buf_size * pipeline[0].get_bufferlength() + 2
-							* pipeline[0].get_tmpsize();
-					System.out.println("it should be only sorter");
-				}*/
+				
 				System.out.printf("the area in each unit is %d\n", area_unit*minsize);
 				System.out.printf("the total area in the pipeline is %d\n",
 						area_unit * conflist.size()*minsize);
@@ -2510,7 +2291,7 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 		// left part
 		buf.append("  <div style=\"width: 5000px; float: left;\">\n");
 		if (clk == 0) {
-			// System.out.println("following we should seperate buf");
+
 			ConfToHtml(buf);
 			buf.append("   <div style=\"width: 600px; height: 50px;\"></div>\n");
 			buf.append("   <div style=\"clear:both;\"></div>\n");
@@ -2572,13 +2353,13 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 					+ "Finally done!" + "</div>\n");
 			output(buf);
 		} else {
-			// System.out.println(list.get(0));
+			
 			if (clk > conflist.size() + 1) {
 				buf.append("<div style=\"width: 2000px; height: 40px; text-align: center;font-size: 25px; font-weight: bold; font-family: 'Comic Sans MS', cursive, sans-serif\">"
 						+ "Waiting for the input data to enter the look aside buffer"
 						+ "</div>\n");
 				StatetoHtml(buf);
-				// System.out.println("haha, we should be here, srt");
+				
 				output(buf);
 			}
 		}
