@@ -1233,6 +1233,7 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 			while ((text = reader.readLine()) != null) {
 				list.add(text);
 			}
+			if (!list.get(0).equalsIgnoreCase("tree merge")) {
 			reader = new BufferedReader(new FileReader(inputdata));
 			while ((text = reader.readLine()) != null) {
 				ArrayList<Integer> tmp = new ArrayList<Integer>();
@@ -1246,6 +1247,7 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 				}
 				input_data.add(tmp);
 
+			}
 			}
 			if (list.get(0).equalsIgnoreCase("nested block join")) {
 				reader = new BufferedReader(new FileReader(inputdata0));
@@ -1526,6 +1528,7 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 		}
 		// bingyi's Sep 6th
 		else {
+			if (!list.get(0).equalsIgnoreCase("tree merge") && !list.get(0).equals("tree partition")) {
 			sim.seperate_file();
 			area_unit = area_unit+real_input.get(0).size()*4;
 			buf_size = (Integer)(buf_size/(real_input.get(0).size()*minsize));
@@ -1798,7 +1801,20 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 			}
 			writer.close();
 		}
-
+		
+		else if (list.get(0).equalsIgnoreCase("tree merge")) {
+			System.out.println("we are in tree merge");
+			System.out.println(list);
+			int way = Integer.parseInt(list.get(1));
+			int col = Integer.parseInt(list.get(2));
+			for (int i=0; i<way; i++) {
+				
+			}
+		}
+		else if (list.get(0).equalsIgnoreCase("tree partition")) {
+			
+		}
+		}
 	}
 
 	private static ArrayList<File> directoryFiles(String path, String extension) {
