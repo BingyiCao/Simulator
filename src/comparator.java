@@ -594,7 +594,40 @@ public void clock_move_onefix_parallel(ArrayList line, int buf_size) {
 		return this.buffer_reverse_change;
 	}
 	public void check_stall(int buf_size) {
+		//if (this.stall== true && this.buffer.size()<buf_size && this.sat_f == true) {
 		if (this.stall== true && this.buffer.size()<buf_size && this.sat_f == true) {
+			this.stall = false;
+			this.stall_change = true;
+			this.buffer_change = true;
+			ArrayList ha = new ArrayList();
+			//ha.add(this.left.get(0));
+			//ha.add(this.tmp0.get(0));
+			
+			if (this.join.size()!=0) {
+				ha.add(this.left.get(0));
+				for (int q = 0; q < join.size(); q++) {
+					ha.add(this.sat_out.get(Integer.parseInt((String) join.get(q))));
+				}
+				//buffer.add(ha);
+				//System.out.println("we are here!!!");
+			}
+			//bingyi's new else
+			else {
+				ha.add(this.left.get(0));
+				ha.add(this.tmp0.get(0));
+			}
+			if (this.sa_mod.equals(sa_mod.keepon_enter)) {
+				buffer.add(ha);
+			}	
+			else if (this.sa_mod.equals(sa_mod.keepon_enter_last)) {
+				ha.add(this.tmp0.get(this.tmp0.size()-1));
+				buffer.add(ha);
+			}
+		}
+	}
+	public void check_stall_last(int buf_size) {
+		//if (this.stall== true && this.buffer.size()<buf_size && this.sat_f == true) {
+		if (this.stall== true && this.buffer.size()<buf_size) {
 			this.stall = false;
 			this.stall_change = true;
 			this.buffer_change = true;

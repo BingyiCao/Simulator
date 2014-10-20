@@ -1173,7 +1173,7 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 			}
 			writer0.printf("\n");
 		}
-		for (int i=0; i<32; i++) {
+		for (int i=0; i<128; i++) {
 			for (int j=0; j<14; j++) {
 				writer1.printf("%d ", rand.nextInt(1000));
 			}
@@ -1571,17 +1571,19 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 					if (end >= 0) {
 						finish = false;
 						// for (int j=0; j<end; j++) {
+						int rm_counter;
 						for (int j = 0; j < conflist.size() - 1; j++) {
 							// if (sim.pipeline[j].buffer_empty()) {
-							int rm_counter = 0;
+							rm_counter = 0;
 							rm_counter = sim.pipeline[j].push_reverse(
 									sim.pipeline[j + 1].get_buffer(),
 									bandwidth, buf_size, rm_counter);
+							//if (sim.pipeline[conflist.size() - 1].get_stall() && j==conflist.size()-2) {
+								//System.out.printf("%d %d\n", sim.pipeline[j+1].get_buffer().size(), sim.pipeline[j+1].get_buffer().size()-1-sim.pipeline[j].get_buffer().size());
+							//}
 							sim.pipeline[j + 1].set_buf_em(rm_counter);
-
-							// }
 						}
-						sim.pipeline[conflist.size() - 1].check_stall(buf_size);
+						sim.pipeline[conflist.size() - 1].check_stall_last(buf_size);
 					}
 				}
 				// while (clk<=set_clk) {
@@ -1621,6 +1623,8 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 					for (int fl = 0; fl < conflist.size(); fl++) {
 						if (sim.pipeline[fl].get_stall()) {
 							stop = true;
+							//System.out.println(fl);
+							break;//bingyi Oct
 						}
 					}
 					if (stop) {
