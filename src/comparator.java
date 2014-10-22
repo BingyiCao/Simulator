@@ -33,7 +33,7 @@ public class comparator {
 			buffer_change, end_signal, buffer_reverse_change, stall_change;
 
 	private enum reg_mod {
-		one_fix, non_fix
+		one_fix, non_fix, non_fix_double
 	}
 
 	private reg_mod register_mod;
@@ -79,14 +79,14 @@ public class comparator {
 			this.left_register = left_r;
 			this.left = left_d;
 			this.right_empty = true;
-		} else if (this.register_mod.equals(register_mod.non_fix)) {
+		} else if (this.register_mod.equals(register_mod.non_fix)||this.register_mod.equals(register_mod.non_fix_double)) {
 			this.left_empty = true;
 			this.right_empty = true;
 		}
 		this.column_selector = cs;
 	}
 
-	public void clock_move(ArrayList line, int buf_size) {
+	public void clock_move(ArrayList line, ArrayList line0, int buf_size) {
 		
 		this.out_change = false;
 		this.complete();
@@ -99,9 +99,14 @@ public class comparator {
 			clock_move_nonfix(line);
 		} else if (this.register_mod.equals(register_mod.one_fix)) {
 			clock_move_onefix(line, buf_size);
+		} else if (this.register_mod.equals(register_mod.non_fix_double)) {
+			clock_move_double(line, line0);
 		}
 		//System.out.println(this.buffer);
 	}
+	
+	
+	
 public void clock_move_parallel(ArrayList line, int buf_size) {
 		
 		this.out_change = false;
@@ -186,12 +191,13 @@ public void clock_move_parallel(ArrayList line, int buf_size) {
 
 	}
 
-	public void push_large() {
+	public int push_large() {
 		if (this.left_register > this.right_register) {
 			this.left_empty = true;
 			this.tmp0_valid = true;
 			this.tmp0_change = true;
 			this.tmp0 = this.left;
+			return 0;
 		} else if (this.left_register <= this.right_register) {
 			this.right_empty = true;
 			this.tmp0_valid = true;
@@ -200,24 +206,29 @@ public void clock_move_parallel(ArrayList line, int buf_size) {
 			if (tmp_size ==0) {
 				tmp_size = tmp0.size();
 			}
+			return 1;
 		}
+		return 2;
 	}
 
-	public void push_small() {
+	public int push_small() {
 		if (this.left_register < this.right_register) {
 			this.left_empty = true;
 			this.tmp0_valid = true;
 			this.tmp0_change = true;
 			this.tmp0 = this.left;
+			return 0;
 		} else if (this.left_register >= this.right_register) {
 			this.right_empty = true;
 			this.tmp0_valid = true;
 			this.tmp0_change = true;
 			this.tmp0 = this.right;
+			return 1;
 		}
 		if (tmp_size ==0) {
 			tmp_size = tmp0.size();
 		}
+		return 2;
 	}
 
 	public void clock_move_onefix(ArrayList line, int buf_size) {
@@ -240,7 +251,172 @@ public void clock_move_parallel(ArrayList line, int buf_size) {
 		//this.right_register = (Integer) line.get(this.column_selector);
 		
 	}
+	public void disable_ov() {
+		this.out_valid = false;
+	}
+public int clock_move_double(ArrayList line0, ArrayList line1) {
+	this.out_change = false;
+	//this.complete();
+	if (!this.out_valid){
+		this.complete();
+		}
+	this.left_change = false;
+	this.right_change = false;
+	this.tmp0_change = false;
+	this.buffer_change = false;
+	this.buffer_reverse_change = false;
+	if (!this.out_valid) {
+		int tmp=2;
+	if (!this.left_empty && !this.right_empty) {
+		if (this.right_empty == false) {
+			if (this.comparator_mod.equals(comparator_mod.larger)) {
+				tmp=this.push_large();
+			}
+			if (this.comparator_mod.equals(comparator_mod.smaller)) {
+				tmp=this.push_small();
+			}
+		}
+		return 2;
+	}
+	}
+	if (line0.size()>0 && line1.size()>0) {
+		if (this.left_empty && this.right_empty) {
+			this.left_empty = false;
+			this.left = line0;
+			this.left_change = true;
+			//System.out.println(line.get(this.column_selector));
+			left_register = (Integer) line0.get(this.column_selector);
+			this.right_empty = false;
+			this.right_change = true;
+			this.right = line1;
+			this.right_register = (Integer) line1.get(this.column_selector);
+			return 3;
 
+		}
+		else if (this.left_empty == true) {
+		this.left_empty = false;
+		this.left = line0;
+		this.left_change = true;
+		//System.out.println(line.get(this.column_selector));
+		left_register = (Integer) line0.get(this.column_selector);
+		return 0;
+
+	} else if (this.right_empty) {
+		this.right_empty = false;
+		this.right_change = true;
+		this.right = line1;
+		this.right_register = (Integer) line1.get(this.column_selector);
+		return 1;
+	}
+	}
+	return 2;
+}
+
+public int clock_move_double_single(ArrayList line0, ArrayList line1) {
+	this.out_change = false;
+	if (!this.out_valid){
+	this.complete();
+	}
+	this.left_change = false;
+	this.right_change = false;
+	this.tmp0_change = false;
+	this.buffer_change = false;
+	this.buffer_reverse_change = false;
+	if (!this.out_valid) {
+	if (!this.left_empty && !this.right_empty) {
+		if (this.right_empty == false) {
+			if (this.comparator_mod.equals(comparator_mod.larger)) {
+				this.push_large();
+			}
+			if (this.comparator_mod.equals(comparator_mod.smaller)) {
+				this.push_small();
+			}
+		}
+	}
+	return 2;
+	}
+	if (this.left_empty && this.right_empty) {
+		if (line0.size()>0) {
+			this.tmp0= line0;
+			return 0;
+		}
+		else {
+			this.tmp0= line1;
+			return 1;
+		}
+	}
+	else if (this.left_empty == true) {
+		if (line0.size()>0) {
+			this.left_empty = false;
+			this.left = line0;
+			this.left_change = true;
+			//System.out.println(line.get(this.column_selector));
+			left_register = (Integer) line0.get(this.column_selector);
+			return 0;
+		}
+		else {
+			this.right_empty = true;
+			this.tmp0 = this.right;
+			return 2;
+		}
+
+	} else if (this.right_empty) {
+		if (line1.size()>0) {
+			this.right_empty = false;
+			this.right = line1;
+			this.right_change = true;
+			//System.out.println(line.get(this.column_selector));
+			right_register = (Integer) line1.get(this.column_selector);
+			return 1;
+		}
+		else {
+			this.right_empty = true;
+			this.tmp0 = this.right;
+			return 2;
+		}
+	}
+	
+	return 2;
+}
+public void last_clk_move_double() {
+	System.out.println("we are in the last clk move double part");
+	this.out_change = false;
+	//this.complete();
+	if (!this.out_valid){
+		this.complete();
+		}
+	this.left_change = false;
+	this.right_change = false;
+	this.tmp0_change = false;
+	this.buffer_change = false;
+	this.buffer_reverse_change = false;
+	if (this.out_valid) {
+	if (!this.left_empty && !this.right_empty) {
+		if (this.right_empty == false) {
+			if (this.comparator_mod.equals(comparator_mod.larger)) {
+				this.push_large();
+			}
+			if (this.comparator_mod.equals(comparator_mod.smaller)) {
+				this.push_small();
+			}
+		}
+	}
+	return;
+	}
+	if (!this.left_empty) {
+		this.tmp0 = this.left;
+		this.left_empty = true;
+		this.tmp0_valid = true;
+	} else if (!this.right_empty) {
+		System.out.println("right empty, should process that to tmp0");
+		this.tmp0 = this.right;
+		this.tmp0_valid = true;
+		this.right_empty = true;
+		//this.tmp0 = this.right;
+	} else {
+		
+	}
+}
 public void clock_move_onefix_parallel(ArrayList line, int buf_size) {
 		
 		this.sat_f = false;
@@ -448,7 +624,12 @@ public void clock_move_onefix_parallel(ArrayList line, int buf_size) {
 		this.out_valid = false;
 		return this.output;
 	}
-
+	
+	public ArrayList read_out() {
+		//this.out_valid = false;
+		return this.output;
+	}
+	
 	public boolean out_f() {
 		return this.out_valid;
 	}
@@ -918,7 +1099,7 @@ public void clock_move_onefix_parallel(ArrayList line, int buf_size) {
 			System.out.format("invalid, ");
 		}
 		System.out.print(this.buffer);
-		System.out.print("]");
+		System.out.print("]\n");
 	}
 
 	public void complete() {
