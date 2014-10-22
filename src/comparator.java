@@ -255,11 +255,12 @@ public void clock_move_parallel(ArrayList line, int buf_size) {
 		this.out_valid = false;
 	}
 public int clock_move_double(ArrayList line0, ArrayList line1) {
-	System.out.println("we are in move double part");
+	//System.out.println("we are in move double part");
 	//System.out.println(line0);
 	//System.out.println(line1);
 	this.out_change = false;
 	//this.complete();
+	//System.out.println(this.out_valid);
 	if (!this.out_valid){
 		this.complete();
 		}
@@ -268,6 +269,7 @@ public int clock_move_double(ArrayList line0, ArrayList line1) {
 	this.tmp0_change = false;
 	this.buffer_change = false;
 	this.buffer_reverse_change = false;
+//	System.out.println(this.out_valid);
 	if (!this.out_valid) {
 		int tmp=2;
 	if (!this.left_empty && !this.right_empty) {
@@ -283,6 +285,8 @@ public int clock_move_double(ArrayList line0, ArrayList line1) {
 	}
 	}
 	if (line0.size()>0 && line1.size()>0) {
+		//System.out.println(this.left_empty);
+		//System.out.println(this.right_empty);
 		if (this.left_empty && this.right_empty) {
 			this.left_empty = false;
 			this.left = line0;
@@ -316,9 +320,9 @@ public int clock_move_double(ArrayList line0, ArrayList line1) {
 }
 
 public int clock_move_double_single(ArrayList line0, ArrayList line1) {
-	System.out.println("we are in move double single part");
-	System.out.println(this.left_empty);
-	System.out.println(this.right_empty);
+	//System.out.println("we are in move double single part");
+	//System.out.println(this.left_empty);
+	//System.out.println(this.right_empty);
 	this.out_change = false;
 	if (!this.out_valid){
 	this.complete();
@@ -358,7 +362,7 @@ public int clock_move_double_single(ArrayList line0, ArrayList line1) {
 		}
 	}
 	else if (this.left_empty == true) {
-		System.out.println("it is in the double single part, left empty");
+		//System.out.println("it is in the double single part, left empty");
 		if (line0.size()>0) {
 			this.left_empty = false;
 			this.left = line0;
@@ -375,7 +379,7 @@ public int clock_move_double_single(ArrayList line0, ArrayList line1) {
 		}
 
 	} else if (this.right_empty) {
-		System.out.println("it is in the double single part, right empty");
+		//System.out.println("it is in the double single part, right empty");
 		if (line1.size()>0) {
 			this.right_empty = false;
 			this.right = line1;
@@ -398,7 +402,7 @@ public int clock_move_double_single(ArrayList line0, ArrayList line1) {
 	return 2;
 }
 public void last_clk_move_double() {
-	System.out.println("we are in the last clk move double part");
+	//System.out.println("we are in the last clk move double part");
 	this.out_change = false;
 	//this.complete();
 	if (!this.out_valid){
@@ -426,9 +430,9 @@ public void last_clk_move_double() {
 		this.tmp0 = this.left;
 		this.left_empty = true;
 		this.tmp0_valid = true;
-		System.out.println("haha we are here");
+		//System.out.println("haha we are here");
 	} else if (!this.right_empty) {
-		System.out.println("right empty, should process that to tmp0");
+		//System.out.println("right empty, should process that to tmp0");
 		this.tmp0 = this.right;
 		this.tmp0_valid = true;
 		this.right_empty = true;
@@ -648,7 +652,7 @@ public void clock_move_onefix_parallel(ArrayList line, int buf_size) {
 	public ArrayList read_out() {
 		//this.out_valid = false;
 		if (this.out_valid)
-		return this.output;
+			return this.output;
 		else 
 			return new ArrayList();
 	}

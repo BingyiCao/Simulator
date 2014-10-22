@@ -1987,19 +1987,19 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 				if (level ==1) {
 					//took = sim.pipeline[i+64].clock_move_double(sim.pipeline[i].get_out(), sim.pipeline[i+1].get_out());
 					if (took !=1) {
-						sim.pipeline[i].disable_ov();
+						sim.pipeline[i*2].disable_ov();
 					}
 					if (took!=0) {
-						sim.pipeline[i+1].disable_ov();
+						sim.pipeline[i*2+1].disable_ov();
 					}
 				}
 				if (level ==2 ) {
 					//took = sim.pipeline[i+64+32].clock_move_double(sim.pipeline[i+64].get_out(), sim.pipeline[i+1+64].get_out());
 					if (took !=1) {
-						sim.pipeline[i+64].disable_ov();
+						sim.pipeline[i*2+64].disable_ov();
 					}
 					if (took !=0) {
-						sim.pipeline[i+1+64].disable_ov();
+						sim.pipeline[i*2+1+64].disable_ov();
 					}
 				}
 				if (level ==3 ) {
@@ -2043,11 +2043,11 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 			level = level+1;
 			node = node/2;
 			}
-			if (sim.pipeline[64].get_outf()) {
-				mergeout.add(sim.pipeline[64].read_out());
+			if (sim.pipeline[96].get_outf()) {
+				mergeout.add(sim.pipeline[96].read_out());
 				System.out.println("haha, the output from the top");
-				System.out.println(sim.pipeline[64].read_out());
-				sim.pipeline[64].disable_ov();
+				System.out.println(sim.pipeline[96].read_out());
+				sim.pipeline[96].disable_ov();
 			}
 			}
 			System.out.println(mergeout);
