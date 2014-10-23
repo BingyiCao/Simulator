@@ -1906,7 +1906,7 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 			ArrayList mergeout = new ArrayList();
 			//while (sortdata.get(0).size()*sortdata.get(1).size()*sortdata.get(2).size()*sortdata.get(3).size()*sortdata.get(4).size()*sortdata.get(5).size()*sortdata.get(6).size()*sortdata.get(7).size()>0 && merge_clk<100) {
 				//really work starts
-			while (mergeout.size()<totalsize && merge_clk<100) {
+			while (mergeout.size()<totalsize && merge_clk<10000) {
 					
 			node = way/2;
 				level =0;
@@ -2050,6 +2050,17 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 				sim.pipeline[96].disable_ov();
 			}
 			}
+			PrintWriter writer3 = new PrintWriter("output-tree-merge", "UTF-8");
+			writer3.printf(
+					"Finished at cycle %d, and the output is as following\n",
+					clk);
+			for (int i =0; i<mergeout.size(); i++) {
+				
+					writer3.println(mergeout.get(i));
+				
+				}
+			
+			writer3.close();
 			System.out.println(mergeout);
 		}
 		

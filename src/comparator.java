@@ -426,12 +426,12 @@ public void last_clk_move_double() {
 	}
 	return;
 	}
-	if (!this.left_empty) {
+	if (!this.left_empty && this.right_empty) {
 		this.tmp0 = this.left;
 		this.left_empty = true;
 		this.tmp0_valid = true;
 		//System.out.println("haha we are here");
-	} else if (!this.right_empty) {
+	} else if (!this.right_empty && this.left_empty) {
 		//System.out.println("right empty, should process that to tmp0");
 		this.tmp0 = this.right;
 		this.tmp0_valid = true;
