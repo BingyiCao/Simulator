@@ -273,13 +273,28 @@ public int clock_move_double(ArrayList line0, ArrayList line1) {
 	if (!this.tmp0_valid) {
 		int tmp=2;
 	if (!this.left_empty && !this.right_empty) {
-		if (this.right_empty == false) {
+		//if (this.right_empty == false) {
 			if (this.comparator_mod.equals(comparator_mod.larger)) {
 				tmp=this.push_large();
 			}
 			if (this.comparator_mod.equals(comparator_mod.smaller)) {
 				tmp=this.push_small();
 			}
+		//}
+		if (this.left_empty) {
+			this.left_empty = false;
+			this.left = line0;
+			this.left_change = true;
+			//System.out.println(line.get(this.column_selector));
+			left_register = (Integer) line0.get(this.column_selector);
+			return 0;
+		}
+		if (this.right_empty) {
+			this.right_empty = false;
+			this.right_change = true;
+			this.right = line1;
+			this.right_register = (Integer) line1.get(this.column_selector);
+			return 1;
 		}
 		return 2;
 	}
@@ -380,6 +395,20 @@ public int clock_move_double_single(ArrayList line0, ArrayList line1) {
 				this.push_small();
 			}
 		}
+		/*if (this.left_empty && line0.size()>0) {
+			this.left = line0;
+			this.left_change = true;
+			//System.out.println(line.get(this.column_selector));
+			left_register = (Integer) line0.get(this.column_selector);
+			return 0;
+		}
+		if (this.right_empty && line1.size()>0) {
+			this.right_empty = false;
+			this.right_change = true;
+			this.right = line1;
+			this.right_register = (Integer) line1.get(this.column_selector);
+			return 1;
+		}*/
 		return 2;
 	}
 	//return 2;

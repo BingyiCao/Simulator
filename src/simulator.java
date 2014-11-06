@@ -1173,9 +1173,9 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 			}
 			writer0.printf("\n");
 		}
-		for (int i=0; i<128; i++) {
-			for (int j=0; j<14; j++) {
-				writer1.printf("%d ", rand.nextInt(1000));
+		for (int i=0; i<80; i++) {
+			for (int j=0; j<2; j++) {
+				writer1.printf("%f ", 1.0*(rand.nextInt(400))/10);
 			}
 			writer1.printf("\n");
 		}
@@ -1528,7 +1528,7 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 		}
 		// bingyi's Sep 6th
 		else {
-			if (!list.get(0).equalsIgnoreCase("tree merge") && !list.get(0).equals("tree partition")) {
+			if (!list.get(0).equalsIgnoreCase("tree merge") && !list.get(0).equalsIgnoreCase("linear merge") && !list.get(0).equals("tree partition")) {
 			sim.seperate_file();
 			area_unit = area_unit+real_input.get(0).size()*4;
 			buf_size = (Integer)(buf_size/(real_input.get(0).size()*minsize));
@@ -1906,268 +1906,6 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 			ArrayList mergeout = new ArrayList();
 			//while (sortdata.get(0).size()*sortdata.get(1).size()*sortdata.get(2).size()*sortdata.get(3).size()*sortdata.get(4).size()*sortdata.get(5).size()*sortdata.get(6).size()*sortdata.get(7).size()>0 && merge_clk<100) {
 				//really work starts
-			while (mergeout.size()<totalsize && merge_clk<100) {
-					
-			node = way/2;
-				level =0;
-				took = 4;
-				System.out.println(merge_clk);
-				merge_clk++;
-			while (node>=1) {
-			for (int i=0; i<node; i++) {
-				if (level ==0) {
-					//System.out.println(sortdata.get(i*2));
-					//System.out.println(sortdata.get(i*2+1));
-					if (sortdata.get(i*2).size()>0 && sortdata.get(i*2+1).size()>0) {
-						took = sim.pipeline[i].clock_move_double(sortdata.get(i*2).get(0), sortdata.get(i*2+1).get(0));
-					}
-					else if (sortdata.get(i*2).size()>0){
-						took = sim.pipeline[i].clock_move_double_single(sortdata.get(i*2).get(0), new ArrayList());
-					} else if (sortdata.get(i*2+1).size()>0) {
-						took = sim.pipeline[i].clock_move_double_single(new ArrayList(), sortdata.get(i*2+1).get(0));
-					} else {
-						sim.pipeline[i].last_clk_move_double();
-					}
-					sim.pipeline[i].get_status();
-				}
-				if (level ==1) {
-					if (sim.pipeline[i*2].read_out().size()>0 && sim.pipeline[i*2+1].read_out().size()>0) {
-						//took = sim.pipeline[i].clock_move_double(sortdata.get(i*2).get(0), sortdata.get(i*2+1).get(0));
-						took = sim.pipeline[i+64].clock_move_double(sim.pipeline[i*2].read_out(), sim.pipeline[i*2+1].read_out());
-					}
-					else if (sim.pipeline[i*2].read_out().size()>0){
-						took = sim.pipeline[i+64].clock_move_double_single(sim.pipeline[i*2].read_out(), new ArrayList());
-					} else if (sim.pipeline[i*2+1].read_out().size()>0) {
-						took = sim.pipeline[i+64].clock_move_double_single(new ArrayList(), sim.pipeline[i*2+1].read_out());
-					} else {
-						System.out.println("level 1, last clk move double");
-						sim.pipeline[i+64].last_clk_move_double();
-					}
-					//took = sim.pipeline[i+64].clock_move_double(sim.pipeline[i*2].read_out(), sim.pipeline[i*2+1].read_out());
-					sim.pipeline[i+64].get_status();
-				}
-				if (level ==2 ) {
-					if (sim.pipeline[i*2+64].read_out().size()>0 && sim.pipeline[i*2+1+64].read_out().size()>0) {
-						//took = sim.pipeline[i].clock_move_double(sortdata.get(i*2).get(0), sortdata.get(i*2+1).get(0));
-						took = sim.pipeline[i+64+32].clock_move_double(sim.pipeline[i*2+64].read_out(), sim.pipeline[i*2+1+64].read_out());
-					}
-					else if (sim.pipeline[i*2+64].read_out().size()>0){
-						took = sim.pipeline[i+64+32].clock_move_double_single(sim.pipeline[i*2+64].read_out(), new ArrayList());
-					} else if (sim.pipeline[i*2+1+64].read_out().size()>0) {
-						took = sim.pipeline[i+64+32].clock_move_double_single(new ArrayList(), sim.pipeline[i*2+1+64].read_out());
-					} else {
-						sim.pipeline[i+64+32].last_clk_move_double();
-					}
-					//took = sim.pipeline[i+64+32].clock_move_double(sim.pipeline[i*2+64].read_out(), sim.pipeline[i*2+1+64].read_out());
-					sim.pipeline[i+64+32].get_status();
-				}
-				if (level ==3 ) {
-					took = sim.pipeline[i+64+32+16].clock_move_double(sim.pipeline[i*2+64+32].read_out(), sim.pipeline[i*2+1+64+32].read_out());
-				}
-				if (level ==4 ) {
-					took = sim.pipeline[i+64+32+16+8].clock_move_double(sim.pipeline[i*2+64+32+16].read_out(), sim.pipeline[i*2+1+64+32+16].read_out());
-				}
-				if (level ==5 ) {
-					took = sim.pipeline[i+64+32+16+8+4].clock_move_double(sim.pipeline[i*2+64+16+8].read_out(), sim.pipeline[i*2+1+64+32+16+8].read_out());
-				}
-				if (level ==6 ) {
-					took = sim.pipeline[i+64+32+16+8+4+2].clock_move_double(sim.pipeline[i*2+64+16+8+4].read_out(), sim.pipeline[i*2+1+64+32+16+8+4].read_out());
-				}
-				if (took<4 && took !=2) {
-				if (level ==0) {
-					if (took !=1) {
-						if (sortdata.get(i*2).size()>0)
-						sortdata.get(i*2).remove(0);
-					}
-					if (took !=0) {
-						if (sortdata.get(i*2+1).size()>0)
-						sortdata.get(i*2+1).remove(0);
-					}
-				}
-				if (level ==1) {
-					//took = sim.pipeline[i+64].clock_move_double(sim.pipeline[i].get_out(), sim.pipeline[i+1].get_out());
-					if (took !=1) {
-						sim.pipeline[i*2].disable_ov();
-					}
-					if (took!=0) {
-						sim.pipeline[i*2+1].disable_ov();
-					}
-				}
-				if (level ==2 ) {
-					//took = sim.pipeline[i+64+32].clock_move_double(sim.pipeline[i+64].get_out(), sim.pipeline[i+1+64].get_out());
-					if (took !=1) {
-						sim.pipeline[i*2+64].disable_ov();
-					}
-					if (took !=0) {
-						sim.pipeline[i*2+1+64].disable_ov();
-					}
-				}
-				if (level ==3 ) {
-					//took = sim.pipeline[i+64+32+16].clock_move_double(sim.pipeline[i+64+32].get_out(), sim.pipeline[i+1+64+32].get_out());
-					if (took !=1) {
-						sim.pipeline[i+64+32].disable_ov();
-					}
-					if (took !=0) {
-						sim.pipeline[i+1+64+32].disable_ov();
-					}
-				}
-				if (level ==4 ) {
-					//took = sim.pipeline[i+64+32+16+8].clock_move_double(sim.pipeline[i+64+32+16].get_out(), sim.pipeline[i+1+64+32+16].get_out());
-					if (took !=1) {
-						sim.pipeline[i+64+32+16].disable_ov();
-					}
-					if (took !=0) {
-						sim.pipeline[i+1+64+32+16].disable_ov();
-					}
-				}
-				if (level ==5 ) {
-					//took = sim.pipeline[i+64+32+16+8+4].clock_move_double(sim.pipeline[i+64+16+8].get_out(), sim.pipeline[i+1+64+32+16+8].get_out());
-					if (took !=1) {
-						sim.pipeline[i+64+32+16+8].disable_ov();
-					}
-					if (took!=0) {
-						sim.pipeline[i+1+64+32+16+8].disable_ov();
-					}
-				}
-				if (level ==6 ) {
-					//took = sim.pipeline[i+64+32+16+8+4+2].clock_move_double(sim.pipeline[i+64+16+8+4].get_out(), sim.pipeline[i+1+64+32+16+8+4].get_out());
-					if (took !=1) {
-						sim.pipeline[i+64+32+16+8+4].disable_ov();
-					}
-					if (took !=0) {
-						sim.pipeline[i+1+64+32+16+8+4].disable_ov();
-					} 
-				}
-			}
-			}
-			level = level+1;
-			node = node/2;
-			}
-			if (sim.pipeline[64].get_outf()) {
-				mergeout.add(sim.pipeline[64].read_out());
-				System.out.println("haha, the output from the top");
-				System.out.println(sim.pipeline[64].read_out());
-				sim.pipeline[64].disable_ov();
-			}
-			}
-			PrintWriter writer3 = new PrintWriter("output-tree-merge", "UTF-8");
-			writer3.printf(
-					"Finished at cycle %d, and the output is as following\n",
-					clk);
-			for (int i =0; i<mergeout.size(); i++) {
-				
-					writer3.println(mergeout.get(i));
-				
-				}
-			
-			writer3.close();
-			System.out.println(mergeout);
-		}
-		else if (list.get(0).equalsIgnoreCase("tree partition")) {
-			//bingyi need to fix the tree partition code
-		/*	System.out.println("we are in tree partition");
-			System.out.println(list);
-			int way = Integer.parseInt(list.get(1));
-			int col = Integer.parseInt(list.get(2));
-			ArrayList<ArrayList<ArrayList>> sortdata = new ArrayList<ArrayList<ArrayList>>();
-			int totalsize=0;
-			for (int i=0; i<way; i++) {
-				ArrayList<ArrayList> singlesort = new ArrayList<ArrayList>();
-				String dataset = "sort";
-				dataset = dataset+i;
-				reader = new BufferedReader(new FileReader(dataset));
-				String text;
-				while ((text = reader.readLine()) != null) {
-					ArrayList<Integer> tmp = new ArrayList<Integer>();
-					Scanner fi = new Scanner(text);
-					fi.useDelimiter(" ");
-					while (true) {
-						if (fi.hasNext()) {
-							tmp.add(fi.nextInt());
-						} else
-							break;
-					}
-					singlesort.add(tmp);
-
-				}
-				sortdata.add(singlesort);
-				totalsize = totalsize+singlesort.size();
-				//System.out.println(singlesort);
-			}
-			
-			int node = way/2;
-			int level =0;
-			int took = 3;
-			//configure Oct21th
-			while (node>=1) {
-				System.out.printf("\n level %d: ", level);
-				for (int i=0; i<node; i++) {
-					if (level ==0) {
-						sim.pipeline[i] = new comparator(0,
-								new ArrayList(), "non_fix_double", "smaller", "keepon",
-								"keepon", new ArrayList(), col);
-						System.out.print(i);
-						System.out.print(" ");
-					}
-					if (level ==1) {
-						//took = sim.pipeline[i+64].clock_move_double(sim.pipeline[i].get_out(), sim.pipeline[i+1].get_out());
-						sim.pipeline[i+64] = new comparator(0,
-								new ArrayList(), "non_fix_double", "smaller", "keepon",
-								"keepon", new ArrayList(), col);
-						System.out.print(i+64);
-						System.out.print(" ");
-					}
-					if (level ==2 ) {
-						//took = sim.pipeline[i+64+32].clock_move_double(sim.pipeline[i+64].get_out(), sim.pipeline[i+1+64].get_out());
-						sim.pipeline[i+64+32] = new comparator(0,
-								new ArrayList(), "non_fix_double", "smaller", "keepon",
-								"keepon", new ArrayList(), col);
-						System.out.print(i+64+32);
-						System.out.print(" ");
-					}
-					if (level ==3 ) {
-						//took = sim.pipeline[i+64+32+16].clock_move_double(sim.pipeline[i+64+32].get_out(), sim.pipeline[i+1+64+32].get_out());
-						sim.pipeline[i+64+32+16] = new comparator(0,
-								new ArrayList(), "non_fix_double", "smaller", "keepon",
-								"keepon", new ArrayList(), col);
-						System.out.print(i+64+32+16);
-						System.out.print(" ");
-					}
-					if (level ==4 ) {
-						//took = sim.pipeline[i+64+32+16+8].clock_move_double(sim.pipeline[i+64+32+16].get_out(), sim.pipeline[i+1+64+32+16].get_out());
-						sim.pipeline[i+64+32+16+8] = new comparator(0,
-								new ArrayList(), "non_fix_double", "smaller", "keepon",
-								"keepon", new ArrayList(), col);
-						System.out.print(i+64+32+16+8);
-						System.out.print(" ");
-					}
-					if (level ==5 ) {
-						//took = sim.pipeline[i+64+32+16+8+4].clock_move_double(sim.pipeline[i+64+16+8].get_out(), sim.pipeline[i+1+64+32+16+8].get_out());
-						sim.pipeline[i+64+32+16+8+4] = new comparator(0,
-								new ArrayList(), "non_fix_double", "smaller", "keepon",
-								"keepon", new ArrayList(), col);
-						System.out.print(i+64+32+16+8+4);
-						System.out.print(" ");
-					}
-					if (level ==6 ) {
-						//took = sim.pipeline[i+64+32+16+8+4+2].clock_move_double(sim.pipeline[i+64+16+8+4].get_out(), sim.pipeline[i+1+64+32+16+8+4].get_out());
-						sim.pipeline[i+64+32+16+8+4+2] = new comparator(0,
-								new ArrayList(), "non_fix_double", "smaller", "keepon",
-								"keepon", new ArrayList(), col);
-						System.out.print(i+64+32+16+8+4+2);
-						System.out.print(" ");
-					}
-				}
-				node = node/2;
-				level = level+1;
-			}
-			
-			//real process of the work
-			int merge_clk=0;
-			System.out.println();
-			ArrayList mergeout = new ArrayList();
-			//while (sortdata.get(0).size()*sortdata.get(1).size()*sortdata.get(2).size()*sortdata.get(3).size()*sortdata.get(4).size()*sortdata.get(5).size()*sortdata.get(6).size()*sortdata.get(7).size()>0 && merge_clk<100) {
-				//really work starts
 			while (mergeout.size()<totalsize && merge_clk<10000) {
 					
 			node = way/2;
@@ -2324,8 +2062,142 @@ if ((Integer)(input_data.get(j).get((Integer.parseInt((String) condition.get(i).
 			
 			writer3.close();
 			System.out.println(mergeout);
+		}
+		else if (list.get(0).equalsIgnoreCase("linear merge")) {
+			System.out.println("we are in linear merge");
+			System.out.println(list);
+			int way = Integer.parseInt(list.get(1));
+			int col = Integer.parseInt(list.get(2));
+			ArrayList<ArrayList<ArrayList>> sortdata = new ArrayList<ArrayList<ArrayList>>();
+			int totalsize=0;
+			for (int i=0; i<way; i++) {
+				ArrayList<ArrayList> singlesort = new ArrayList<ArrayList>();
+				String dataset = "sort";
+				dataset = dataset+i;
+				reader = new BufferedReader(new FileReader(dataset));
+				String text;
+				while ((text = reader.readLine()) != null) {
+					ArrayList<Integer> tmp = new ArrayList<Integer>();
+					Scanner fi = new Scanner(text);
+					fi.useDelimiter(" ");
+					while (true) {
+						if (fi.hasNext()) {
+							tmp.add(fi.nextInt());
+						} else
+							break;
+					}
+					singlesort.add(tmp);
+
+				}
+				sortdata.add(singlesort);
+				totalsize = totalsize+singlesort.size();
+				//System.out.println(singlesort);
+			}
+			
+			int node = way-1;
+			//int level =0;
+			//int took = 3;
+			//configure Oct21th
+			for (int i=0; i<node; i++) {
+						sim.pipeline[i] = new comparator(0,
+								new ArrayList(), "non_fix_double", "smaller", "keepon",
+								"keepon", new ArrayList(), col);
+			}
+			
+			//real process of the work
+			int merge_clk=0;
+			System.out.println();
+			ArrayList mergeout = new ArrayList();
+			//while (sortdata.get(0).size()*sortdata.get(1).size()*sortdata.get(2).size()*sortdata.get(3).size()*sortdata.get(4).size()*sortdata.get(5).size()*sortdata.get(6).size()*sortdata.get(7).size()>0 && merge_clk<100) {
+				//really work starts
+			while (mergeout.size()<totalsize && merge_clk<10000) {
+					
+			//node = way/2;
+				//level =0;
+			int took = 4;
+				System.out.println(merge_clk);
+				merge_clk++;
+			//while (node>=1) {
+			for (int i=0; i<node; i++) {
+				if ( i==0) {
+					//System.out.println(sortdata.get(i*2));
+					//System.out.println(sortdata.get(i*2+1));
+					if (sortdata.get(i).size()>0 && sortdata.get(i+1).size()>0) {
+						took = sim.pipeline[i].clock_move_double(sortdata.get(i*2).get(0), sortdata.get(i*2+1).get(0));
+					}
+					else if (sortdata.get(i*2).size()>0){
+						took = sim.pipeline[i].clock_move_double_single(sortdata.get(i*2).get(0), new ArrayList());
+					} else if (sortdata.get(i*2+1).size()>0) {
+						took = sim.pipeline[i].clock_move_double_single(new ArrayList(), sortdata.get(i*2+1).get(0));
+					} else {
+						sim.pipeline[i].last_clk_move_double();
+					}
+					sim.pipeline[i].get_status();
+				}
+				else {
+					if (sim.pipeline[i-1].read_out().size()>0 && sortdata.get(i+1).size()>0) {
+						//took = sim.pipeline[i].clock_move_double(sortdata.get(i*2).get(0), sortdata.get(i*2+1).get(0));
+						took = sim.pipeline[i].clock_move_double(sim.pipeline[i-1].read_out(), sortdata.get(i+1).get(0));
+					}
+					else if (sim.pipeline[i-1].read_out().size()>0){
+						took = sim.pipeline[i].clock_move_double_single(sim.pipeline[i-1].read_out(), new ArrayList());
+					} else if (sortdata.get(i+1).size()>0) {
+						took = sim.pipeline[i].clock_move_double_single(new ArrayList(), sortdata.get(i+1).get(0));
+					} else {
+						//System.out.println("level 1, last clk move double");
+						sim.pipeline[i].last_clk_move_double();
+					}
+					//took = sim.pipeline[i+64].clock_move_double(sim.pipeline[i*2].read_out(), sim.pipeline[i*2+1].read_out());
+					sim.pipeline[i].get_status();
+				}
+				
+				if (took<4 && took !=2) {
+				if (i ==0) {
+					if (took !=1) {
+						if (sortdata.get(i*2).size()>0)
+						sortdata.get(i*2).remove(0);
+					}
+					if (took !=0) {
+						if (sortdata.get(i*2+1).size()>0)
+						sortdata.get(i*2+1).remove(0);
+					}
+				}
+				else {
+					if (took !=1) {
+						sim.pipeline[i-1].disable_ov();
+					}
+					if (took!=0) {
+						sortdata.get(i+1).remove(0);
+					}
+				}
+				
+			}
+			}
+			if (sim.pipeline[node-1].get_outf()) {
+				mergeout.add(sim.pipeline[node-1].read_out());
+				System.out.println("haha, the output from the top");
+				System.out.println(sim.pipeline[node-1].read_out());
+				sim.pipeline[node-1].disable_ov();
+			}
+			}
+			PrintWriter writer3 = new PrintWriter("output-tree-merge", "UTF-8");
+			writer3.printf(
+					"Finished at cycle %d, and the output is as following\n",
+					clk);
+			for (int i =0; i<mergeout.size(); i++) {
+				
+					writer3.println(mergeout.get(i));
+				
+				}
+			
+			writer3.close();
+			System.out.println(mergeout);
 			//bingyi need to fix the tree partition code*/
 		}
+		else if (list.get(0).equalsIgnoreCase("tree partition")) {
+		
+		}
+		
 		}
 	}
 
